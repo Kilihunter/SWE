@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model.Haltbarkeitsdatum;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model.Item;
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model.Lebensmittel;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.repository.ItemRepository;
 
 @Service
@@ -28,19 +30,9 @@ public class ItemService {
     return itemRepository.findById(id);
   }
 
-  @Transactional(readOnly = true)
-  public Optional<Item> findByName(String name) {
-    return itemRepository.findByName(name);
-  }
 
-  @Transactional(readOnly = true)
-  public List<Item> searchByName(String namePart) {
-    return itemRepository.findByNameContainingIgnoreCase(namePart);
-  }
-
-  public Item create(String name) {
-    Item item = new Item();
-    item.setName(name);
+  public Item create(Haltbarkeitsdatum haltbarkeit, Lebensmittel lebensmittel) {
+    Item item = new Item(haltbarkeit, lebensmittel);
     return itemRepository.save(item);
   }
 

@@ -1,22 +1,45 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model;
 
+import org.springframework.web.bind.annotation.*;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Item {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue
+  private int id;
 
-  private String name;
+  @ManyToOne
+  @JoinColumn(name = "haltbarkeit_id")
+  private Haltbarkeitsdatum haltbarkeit;
 
-  // getter/setter
-  public Long getId() { return id; }
-  public void setId(Long id) { this.id = id; }
+  @ManyToOne
+  @JoinColumn(name = "lebensmittel_id")
+  private Lebensmittel lebensmittel;
 
-  public String getName() { return name; }
-  public void setName(String name) { this.name = name; }
+  public Item(Haltbarkeitsdatum haltbarkeit, Lebensmittel lebensmittel) {
+    lebensmittel.eingekauft(this);
+
+    haltbarkeit.itemHinzufügen(this);
+  }
+  protected Item(){}
+
+  protected void haltbarkeitAendern(Haltbarkeitsdatum neueHaltbarkeit) {
+    if(neueHaltbarkeit != null && neueHaltbarkeit != haltbarkeit) {
+        haltbarkeit = neueHaltbarkeit;
+    }
+  }
+  protected void lebensmittelAendern(Lebensmittel neuesLebensmittel) {
+    if(neuesLebensmittel != null && neuesLebensmittel != lebensmittel) {
+        lebensmittel = neuesLebensmittel;
+    }
+  }
+
 }
+

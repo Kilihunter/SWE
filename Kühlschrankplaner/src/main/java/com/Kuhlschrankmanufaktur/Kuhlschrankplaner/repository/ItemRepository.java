@@ -11,7 +11,7 @@ import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model.Item;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-	Optional<Item> findByName(String name);
+	Optional<Item> findFirstByLebensmittel_NameIgnoreCase(String name);
 
-	List<Item> findByNameContainingIgnoreCase(String namePart);
+	List<Item> findByLebensmittel_NameContainingIgnoreCase(String namePart);
 }
