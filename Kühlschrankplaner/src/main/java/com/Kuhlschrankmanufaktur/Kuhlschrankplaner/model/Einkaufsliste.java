@@ -1,7 +1,6 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,16 +18,16 @@ public class Einkaufsliste {
 
     @OneToMany
     @JoinColumn(name = "lebensmittel_id")
-    private Map<Lebensmittel, Integer> lebensmittel;
+    private List<Lebensmittel> lebensmittel;
     // lebensmittel mit stückangabe 
 
     Einkaufsliste(){
-        lebensmittel = new HashMap<>();
+        lebensmittel = new ArrayList<>();
     }
 
-    protected void lebensmittelHinzufügen(Lebensmittel neuesLebensmittel, int anzahl) {
-        if (neuesLebensmittel != null && !lebensmittel.containsKey(neuesLebensmittel)) {
-            lebensmittel.put(neuesLebensmittel, anzahl);
+    protected void lebensmittelHinzufügen(Lebensmittel neuesLebensmittel) {
+        if (neuesLebensmittel != null && !lebensmittel.contains(neuesLebensmittel)) {
+            lebensmittel.add(neuesLebensmittel);
         }
     }
 }

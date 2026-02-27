@@ -1,20 +1,22 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model;
 
-import java.sql.Date;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-
+@Entity
 public class Haltbarkeitsdatum {
     @Id
     private Date datum;
 
-    @OneToMany(mappedBy = "haltbarkeitsdatum")
+    @OneToMany(mappedBy = "haltbarkeit")
     private List<Item> items;
 
-    Haltbarkeitsdatum(Date datum) {
+    public Haltbarkeitsdatum(Date datum) {
         this.datum = datum;
         items = new ArrayList<>();
     }

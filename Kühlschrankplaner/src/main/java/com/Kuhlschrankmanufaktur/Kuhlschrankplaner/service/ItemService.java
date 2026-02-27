@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model.Haltbarkeitsdatum;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model.Item;
@@ -20,13 +20,12 @@ public class ItemService {
     this.itemRepository = itemRepository;
   }
 
-  @Transactional(readOnly = true)
+  
   public List<Item> findAll() {
     return itemRepository.findAll();
   }
 
-  @Transactional(readOnly = true)
-  public Optional<Item> findById(Long id) {
+  public Optional<Item> findById(int id) {
     return itemRepository.findById(id);
   }
 
@@ -40,7 +39,7 @@ public class ItemService {
     return itemRepository.save(item);
   }
 
-  public void deleteById(Long id) {
+  public void deleteById(int id) {
     itemRepository.deleteById(id);
   }
 }

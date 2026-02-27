@@ -22,7 +22,7 @@ public class Kategorie {
     @OneToMany(mappedBy = "kategorie")
     private List<Lebensmittel> lebensmittel;
     
-    Kategorie(String name) {
+    public Kategorie(String name) {
         this.name = name;
         lebensmittel = new ArrayList<>();
     }
@@ -34,15 +34,6 @@ public class Kategorie {
             this.lebensmittel.add(newlebensmittel);
             newlebensmittel.kategorieAendern(this);
         }
-    }
-    public int getId() {
-        return id;
-    }
-    public List<Lebensmittel> getLebensmittel() {
-        return lebensmittel;
-    }
-    public String getName() {
-        return name;
     }
 
     

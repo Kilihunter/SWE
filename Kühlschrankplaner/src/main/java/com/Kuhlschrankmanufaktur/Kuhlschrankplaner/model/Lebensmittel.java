@@ -32,7 +32,7 @@ public class Lebensmittel {
 
     private int minimalAnzahl;
 
-    public Lebensmittel( Kategorie kategorie, String name, int minimalAnzahl) {
+    public Lebensmittel(Kategorie kategorie, String name, int minimalAnzahl) {
         kategorie.lebensmittelHinzufügen(this);
         this.name = name;
         this.currentAnzahl = 0;
@@ -64,25 +64,4 @@ public class Lebensmittel {
         }
     }
 
-    public int getCurrentAnzahl() {
-        return currentAnzahl;
-    }
-    public String getEinheit() {
-        return einheit;
-    }
-    public int getMinimalAnzahl() {
-        return minimalAnzahl;
-    }
-    public String getName() {
-        return name;
-    }
-    public int getId() {
-        return id;
-    }
-    public List<Item> getItems() {
-        return items;
-    }
-    public Kategorie getKategorie() {
-        return kategorie;
-    }
 }
