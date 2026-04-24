@@ -8,7 +8,7 @@ public class Item {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
     @Embedded
     private Lebensmittel lebensmittel;
@@ -76,7 +76,7 @@ public class Item {
         return Objects.hash(id);
     }
 
-    public Long getId() { return id; }
+    public Integer getId() { return id; }
     public Lebensmittel getLebensmittel() { return lebensmittel; }
     public Haltbarkeitsdatum getHaltbarkeit() { return haltbarkeit; }
     public Menge getMenge() { return menge; }

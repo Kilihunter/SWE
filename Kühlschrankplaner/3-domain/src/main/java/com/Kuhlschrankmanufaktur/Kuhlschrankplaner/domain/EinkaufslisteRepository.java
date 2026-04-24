@@ -3,14 +3,10 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repository-Interface für die Einkaufsliste (Aggregate Root).
- * Gehört in die Domain-Schicht – definiert den Vertrag für Datenzugriff.
- * Die Implementierung erfolgt in der Plugin-Schicht.
- */
+
 public interface EinkaufslisteRepository {
 
-    Optional<Einkaufsliste> findById(Long id);
+    Optional<Einkaufsliste> findById(Integer id);
     List<Einkaufsliste> findAll();
 
     Einkaufsliste save(Einkaufsliste einkaufsliste);

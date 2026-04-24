@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class KühlschrankResourceMapper {
 
     public KühlschrankResource map(Kühlschrank domainKühlschrank) {
-        long id = domainKühlschrank.getId();
+        Integer id = domainKühlschrank.getId();
         return new KühlschrankResource(id, domainKühlschrank.getName());
     }
 }

@@ -12,12 +12,12 @@ public class KühlschrankRepositoryBridge implements KühlschrankRepository {
 
     private final DataKühlschrankRepository Repo;
 
-    public KühlschrankRepositoryBridge(DataKühlschrankRepository springDataRepo) {
-        this.Repo = springDataRepo;
+    public KühlschrankRepositoryBridge(DataKühlschrankRepository DataRepo) {
+        this.Repo = DataRepo;
     }
 
     @Override
-    public Optional<Kühlschrank> findById(Long id) {
+    public Optional<Kühlschrank> findById(Integer id) {
         return Repo.findById(id);
     }
 

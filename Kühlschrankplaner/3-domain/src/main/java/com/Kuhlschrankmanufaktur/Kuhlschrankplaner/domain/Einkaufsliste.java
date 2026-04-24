@@ -19,7 +19,7 @@ public class Einkaufsliste {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
     private String name;
 
@@ -39,7 +39,7 @@ public class Einkaufsliste {
         this.name = name;
     }
 
-    public Long getId() { return id; }
+    public Integer getId() { return id; }
     public String getName() { return name; }
 
     public void schreibeAuf(int anzahl, String lebensmittelName) {

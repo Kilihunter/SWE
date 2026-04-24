@@ -2,6 +2,8 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 
 import java.util.Objects;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 /**
  * Value Object für eine Mengenangabe (Anzahl + Einheit).
@@ -10,7 +12,7 @@ import jakarta.persistence.Embeddable;
 public final class Menge {
 
     private final int anzahl;
-
+    @Enumerated(EnumType.STRING)
     private final Einheit einheit;
 
     protected Menge() {

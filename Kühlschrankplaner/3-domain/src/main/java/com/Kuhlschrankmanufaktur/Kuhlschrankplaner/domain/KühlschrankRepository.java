@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface KühlschrankRepository {
 
-    Optional<Kühlschrank> findById(Long id);
+    Optional<Kühlschrank> findById(Integer id);
     List<Kühlschrank> findAll();
 
     Kühlschrank save(Kühlschrank kühlschrank);

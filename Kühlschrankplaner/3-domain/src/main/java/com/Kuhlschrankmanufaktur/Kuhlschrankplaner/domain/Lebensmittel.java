@@ -2,12 +2,15 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 
 import java.util.Objects;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Embeddable
 public final class Lebensmittel {
 
     private final String name;
 
+    @Enumerated(EnumType.STRING)
     private final Kategorie kategorie;
 
     protected Lebensmittel() {

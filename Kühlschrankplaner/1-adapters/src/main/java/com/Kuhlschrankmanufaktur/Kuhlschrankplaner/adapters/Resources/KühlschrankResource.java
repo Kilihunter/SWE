@@ -1,15 +1,15 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters;
 
 public class KühlschrankResource {
-    public long id;
+    public Integer id;
     public String name;
 
-    public KühlschrankResource(long id, String name) {
+    public KühlschrankResource(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 

@@ -20,7 +20,7 @@ public class Kühlschrank {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
     private String name;
 
@@ -37,7 +37,7 @@ public class Kühlschrank {
         this.name = name;
     }
 
-    public Long getId() { return id; }
+    public Integer getId() { return id; }
     public String getName() { return name; }
 
     public List<Item> getItems() {
@@ -50,7 +50,7 @@ public class Kühlschrank {
         item.setKühlschrank(this);
     }
 
-    public boolean itemVerbrauchen(Long itemId, int verbrauchteAnzahl) {
+    public boolean itemVerbrauchen(Integer itemId, int verbrauchteAnzahl) {
         for (Item item : items) {
             if (item.getId() != null && item.getId().equals(itemId)) {
                 int neueAnzahl = item.getMenge().getAnzahl() - verbrauchteAnzahl;
@@ -70,10 +70,10 @@ public class Kühlschrank {
         return false;
     }
 
-    public long bestandVon(String lebensmittelName) {
+    public Integer bestandVon(String lebensmittelName) {
         return items.stream()
                 .filter(i -> i.getLebensmittel().getName().equalsIgnoreCase(lebensmittelName))
-                .mapToLong(i -> i.getMenge().getAnzahl())
+                .mapToInt(i -> i.getMenge().getAnzahl())
                 .sum();
     }
 
