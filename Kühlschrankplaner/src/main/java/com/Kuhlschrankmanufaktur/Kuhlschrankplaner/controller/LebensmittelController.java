@@ -1,4 +1,4 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.controller;
+/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.controller;
 
 
 import java.util.Date;
@@ -56,3 +56,5 @@ public class LebensmittelController {
        return lebensmittelService.findAll();
     }
 }
+    */
+   

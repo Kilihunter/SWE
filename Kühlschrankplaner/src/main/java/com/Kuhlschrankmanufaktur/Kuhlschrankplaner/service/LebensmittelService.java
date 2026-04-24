@@ -1,4 +1,5 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.service;
+
+/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.service;
 
 import java.util.List;
 
@@ -42,3 +43,4 @@ public class LebensmittelService {
         }
     }
 }
+    */

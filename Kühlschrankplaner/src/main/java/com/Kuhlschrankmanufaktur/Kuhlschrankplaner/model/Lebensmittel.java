@@ -1,67 +1,70 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model;
-import java.util.ArrayList;
-import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue; 
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import java.util.Objects;
+import jakarta.persistence.Embeddable;
 
-@Entity
-public class Lebensmittel {
-    @Id
-    @GeneratedValue
-    private int id;    
 
-    @OneToMany(mappedBy = "lebensmittel")
-    private List<Item> items;
+@Embeddable
+public final class Lebensmittel {
 
-    @ManyToOne
-    @JoinColumn(name = "kategorie_id")
-    private Kategorie kategorie;
+    private final String name;
 
-    @Column(unique=true)
-    private String name;
+    private final Kategorie kategorie;
 
-    private String einheit;
+    private final Einheit einheit;
 
-    private int currentAnzahl;
+    protected Lebensmittel() {
+        this.name = null;
+        this.kategorie = null;
+        this.einheit = null;
+    }
 
-    private int minimalAnzahl;
-
-    public Lebensmittel(Kategorie kategorie, String name, int minimalAnzahl) {
-        kategorie.lebensmittelHinzufügen(this);
+    
+    public Lebensmittel(String name, Kategorie kategorie, Einheit einheit) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Der Name des Lebensmittels darf nicht leer sein.");
+        }
+        if (kategorie == null) {
+            throw new IllegalArgumentException("Kategorie darf nicht null sein.");
+        }
+        if (einheit == null) {
+            throw new IllegalArgumentException("Einheit darf nicht null sein.");
+        }
+        
         this.name = name;
-        this.currentAnzahl = 0;
-        this.minimalAnzahl = minimalAnzahl;
-        items = new ArrayList<>();
-    }
-    protected Lebensmittel(){}
-
-    public void Namenändern(String name){
-        this.name = name;
+        this.kategorie = kategorie;
+        this.einheit = einheit;
     }
 
-    public void gegessen(Item item){
-        if (items.contains(item)) {
-            items.remove(item);
-            currentAnzahl--;
-        }
-    }
-    public void eingekauft(Item item){
-        if (!items.contains(item)) {
-            items.add(item);
-            item.lebensmittelAendern(this);
-            currentAnzahl++;
-        }
-    }
-    protected void kategorieAendern(Kategorie neueKategorie) {
-        if(neueKategorie != null && neueKategorie != kategorie) {
-            kategorie = neueKategorie;
-        }
+    public String getName() {
+        return name;
     }
 
+    public Kategorie getKategorie() {
+        return kategorie;
+    }
+
+    public Einheit getEinheit() {
+        return einheit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lebensmittel that = (Lebensmittel) o;
+        return Objects.equals(name, that.name) && 
+               kategorie == that.kategorie && 
+               einheit == that.einheit;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, kategorie, einheit);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s, Einheit: %s)", name, kategorie, einheit);
+    }
 }

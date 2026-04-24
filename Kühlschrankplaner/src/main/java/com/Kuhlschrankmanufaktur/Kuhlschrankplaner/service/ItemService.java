@@ -1,4 +1,4 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.service;
+/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,3 +43,4 @@ public class ItemService {
     itemRepository.deleteById(id);
   }
 }
+*/

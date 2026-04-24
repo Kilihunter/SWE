@@ -1,41 +1,85 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Item {
-  @Id
-  @GeneratedValue
-  private int id;
 
-  @ManyToOne
-  @JoinColumn(name = "haltbarkeit_id")
-  private Haltbarkeitsdatum haltbarkeit;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "lebensmittel_id")
-  private Lebensmittel lebensmittel;
+    @Embedded
+    private Lebensmittel lebensmittel;
 
-  public Item(Haltbarkeitsdatum haltbarkeit, Lebensmittel lebensmittel) {
-    lebensmittel.eingekauft(this);
-    haltbarkeit.itemHinzufügen(this);
-  }
-  protected Item(){}
+    @Embedded
+    private Haltbarkeitsdatum haltbarkeit;
 
-  protected void haltbarkeitAendern(Haltbarkeitsdatum neueHaltbarkeit) {
-    if(neueHaltbarkeit != null && neueHaltbarkeit != haltbarkeit) {
-        haltbarkeit = neueHaltbarkeit;
+    @Embedded
+    private Menge menge;
+
+    @ManyToOne
+    @JoinColumn(name = "kuehlschrank_id")
+    private Kühlschrank kühlschrank;
+
+    protected Item() { }
+
+    public Item(Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl) {
+        validateState(lebensmittel, haltbarkeit, anzahl);
+        
+        this.lebensmittel = lebensmittel;
+        this.haltbarkeit = haltbarkeit;
+        this.menge = new Menge(anzahl, lebensmittel.getEinheit());
     }
-  }
-  protected void lebensmittelAendern(Lebensmittel neuesLebensmittel) {
-    if(neuesLebensmittel != null && neuesLebensmittel != lebensmittel) {
-        lebensmittel = neuesLebensmittel;
-    }
-  }
 
+    private void validateState(Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl) {
+        if (lebensmittel == null) throw new IllegalArgumentException("Lebensmittel fehlt.");
+        if (haltbarkeit == null) throw new IllegalArgumentException("Haltbarkeit fehlt.");
+        if (anzahl <= 0) throw new IllegalArgumentException("Menge muss positiv sein.");
+        
+        if (haltbarkeit.istAbgelaufen()) {
+            throw new IllegalArgumentException("Abgelaufene Lebensmittel können nicht neu hinzugefügt werden.");
+        }
+    }
+
+
+    public void mengeAnpassen(int neueAnzahl) {
+        if (neueAnzahl <= 0) {
+            throw new IllegalArgumentException("Die neue Anzahl muss größer als 0 sein. Zum Entfernen bitte Löschfunktion nutzen.");
+        }
+        this.menge = new Menge(neueAnzahl, this.lebensmittel.getEinheit());
+    }
+
+    public void verlaengereHaltbarkeit(Haltbarkeitsdatum neuesDatum) {
+        if (neuesDatum == null || neuesDatum.istAbgelaufen()) {
+            throw new IllegalArgumentException("Ungültiges neues Haltbarkeitsdatum.");
+        }
+        this.haltbarkeit = neuesDatum;
+    }
+    public boolean istAbgelaufen() {
+        return haltbarkeit.istAbgelaufen();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item item)) return false;
+        return id != null && id.equals(item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public Long getId() { return id; }
+    public Lebensmittel getLebensmittel() { return lebensmittel; }
+    public Haltbarkeitsdatum getHaltbarkeit() { return haltbarkeit; }
+    public Menge getMenge() { return menge; }
+    public Kühlschrank getKühlschrank() { return kühlschrank; }
+
+    void setKühlschrank(Kühlschrank kühlschrank) {
+        this.kühlschrank = kühlschrank;
+    }
 }
-
