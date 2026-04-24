@@ -46,10 +46,11 @@ public class KühlschrankDomainService {
                                    Kühlschrank kuehlschrank,
                                    Lebensmittel lebensmittel,
                                    Haltbarkeitsdatum haltbarkeit,
-                                   int anzahl) {
+                                   int anzahl,
+                                   Einheit einheit) {
         einkaufsliste.eingekauft(anzahl, lebensmittel.getName());
 
-        Item item = new Item(lebensmittel, haltbarkeit, anzahl);
+        Item item = new Item(lebensmittel, haltbarkeit, anzahl, einheit);
         kuehlschrank.itemHinzufuegen(item);
         return kuehlschrank;
     }

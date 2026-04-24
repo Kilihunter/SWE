@@ -20,10 +20,10 @@
 	</properties>
 
 	<modules>
-		<module>0-domain</module>
-		<module>1-application</module>
-		<module>2-adapters</module>
-		<module>3-plugins</module>
+		<module>3-domain</module>
+		<module>2-application</module>
+		<module>1-adapters</module>
+		<module>0-plugins</module>
 	</modules>
 
 </project>

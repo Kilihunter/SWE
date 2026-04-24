@@ -18,7 +18,7 @@ import jakarta.persistence.MapKeyColumn;
 public class Einkaufsliste {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     private String name;

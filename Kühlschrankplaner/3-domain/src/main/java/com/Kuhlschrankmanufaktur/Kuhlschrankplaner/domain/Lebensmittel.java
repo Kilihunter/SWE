@@ -3,10 +3,6 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 import java.util.Objects;
 import jakarta.persistence.Embeddable;
 
-/**
- * Value Object Lebensmittel.
- * Ein Lebensmittel wird durch seinen Namen, seine Kategorie und seine Einheit definiert.
- */
 @Embeddable
 public final class Lebensmittel {
 
@@ -14,12 +10,9 @@ public final class Lebensmittel {
 
     private final Kategorie kategorie;
 
-    private final Einheit einheit;
-
     protected Lebensmittel() {
         this.name = null;
         this.kategorie = null;
-        this.einheit = null;
     }
 
     public Lebensmittel(String name, Kategorie kategorie, Einheit einheit) {
@@ -29,13 +22,9 @@ public final class Lebensmittel {
         if (kategorie == null) {
             throw new IllegalArgumentException("Kategorie darf nicht null sein.");
         }
-        if (einheit == null) {
-            throw new IllegalArgumentException("Einheit darf nicht null sein.");
-        }
 
         this.name = name;
         this.kategorie = kategorie;
-        this.einheit = einheit;
     }
 
     public String getName() {
@@ -46,9 +35,6 @@ public final class Lebensmittel {
         return kategorie;
     }
 
-    public Einheit getEinheit() {
-        return einheit;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -56,17 +42,16 @@ public final class Lebensmittel {
         if (o == null || getClass() != o.getClass()) return false;
         Lebensmittel that = (Lebensmittel) o;
         return Objects.equals(name, that.name) &&
-               kategorie == that.kategorie &&
-               einheit == that.einheit;
+               kategorie == that.kategorie;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, kategorie, einheit);
+        return Objects.hash(name, kategorie);
     }
 
     @Override
     public String toString() {
-        return String.format("%s (%s, Einheit: %s)", name, kategorie, einheit);
+        return String.format("%s (%s)", name, kategorie);
     }
 }

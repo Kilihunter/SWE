@@ -25,12 +25,12 @@ public class Item {
 
     protected Item() { }
 
-    public Item(Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl) {
+    public Item(Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl, Einheit einheit) {
         validateState(lebensmittel, haltbarkeit, anzahl);
 
         this.lebensmittel = lebensmittel;
         this.haltbarkeit = haltbarkeit;
-        this.menge = new Menge(anzahl, lebensmittel.getEinheit());
+        this.menge = new Menge(anzahl, einheit);
     }
 
     private void validateState(Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl) {
@@ -47,7 +47,7 @@ public class Item {
         if (neueAnzahl <= 0) {
             throw new IllegalArgumentException("Die neue Anzahl muss größer als 0 sein. Zum Entfernen bitte Löschfunktion nutzen.");
         }
-        this.menge = new Menge(neueAnzahl, this.lebensmittel.getEinheit());
+        this.menge = new Menge(neueAnzahl, this.getEinheit());
     }
 
     public void verlaengereHaltbarkeit(Haltbarkeitsdatum neuesDatum) {
@@ -57,6 +57,9 @@ public class Item {
         this.haltbarkeit = neuesDatum;
     }
 
+    public Einheit getEinheit() {
+        return menge.getEinheit();
+    }
     public boolean istAbgelaufen() {
         return haltbarkeit.istAbgelaufen();
     }

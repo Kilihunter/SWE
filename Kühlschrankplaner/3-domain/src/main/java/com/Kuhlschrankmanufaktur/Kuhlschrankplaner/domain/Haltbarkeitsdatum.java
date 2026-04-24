@@ -27,7 +27,12 @@ public final class Haltbarkeitsdatum {
     public boolean istAbgelaufen() {
         return datum.isBefore(LocalDate.now());
     }
-
+    public boolean laeuftBaldAb(int tage) {
+    LocalDate heute = LocalDate.now();
+    LocalDate grenze = heute.plusDays(tage);
+    
+    return !datum.isBefore(heute) && !datum.isAfter(grenze);
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
