@@ -50,24 +50,29 @@ public class Kühlschrank {
         item.setKühlschrank(this);
     }
 
-    public boolean itemVerbrauchen(Integer itemId, int verbrauchteAnzahl) {
-        for (Item item : items) {
-            if (item.getId() != null && item.getId().equals(itemId)) {
-                int neueAnzahl = item.getMenge().getAnzahl() - verbrauchteAnzahl;
+    public void itemVerbrauchen(Integer itemId, int verbrauchteAnzahl) {
+        Item gefundenesItem = items.stream()
+                .filter(item -> item.getId() != null && item.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Item mit ID " + itemId + " nicht gefunden."));
 
-                if (neueAnzahl > 0) {
-                    item.mengeAnpassen(neueAnzahl);
-                    return true;
-                } else if (neueAnzahl < 0) {
-                    throw new IllegalArgumentException("Es können nicht mehr Items verbraucht werden als vorhanden sind.");
-                } else {
-                    items.remove(item);
-                    item.setKühlschrank(null);
-                    return true;
-                }
-            }
+        int neueAnzahl = gefundenesItem.getMenge().getAnzahl() - verbrauchteAnzahl;
+
+        if (neueAnzahl > 0) {
+            gefundenesItem.mengeAnpassen(neueAnzahl);
+        } else if (neueAnzahl < 0) {
+            throw new IllegalArgumentException("Es können nicht mehr Items verbraucht werden als vorhanden sind.");
+        } else {
+            this.itemEntfernen(itemId);
         }
-        return false;
+    }
+    public void itemEntfernen(Integer itemId) {
+        Item itemZumEntfernen = items.stream()
+                .filter(item -> item.getId() != null && item.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Item mit ID " + itemId + " nicht gefunden."));
+        items.remove(itemZumEntfernen);
+        itemZumEntfernen.setKühlschrank(null);
     }
 
     public Integer bestandVon(String lebensmittelName) {

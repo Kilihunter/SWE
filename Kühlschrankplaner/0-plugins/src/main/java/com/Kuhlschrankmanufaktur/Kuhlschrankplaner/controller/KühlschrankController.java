@@ -29,7 +29,7 @@ public class KühlschrankController {
 
     public record CreateKühlschrankRequest(String name) {}
     public record CreateItemRequest(String lebensmittelName, String kategorie, String einheit, LocalDate haltbarBis, int anzahl) {}
-
+    public record UpdateItemRequest(int neueAnzahl) {}
     @PostMapping
     public ResponseEntity<KühlschrankResource> erstelleKühlschrank(@RequestBody CreateKühlschrankRequest request) {
         var neuerKühlschrank = appService.kühlschrankAnlegen(request.name());
@@ -55,14 +55,15 @@ public class KühlschrankController {
         var responseResource = kühlschrankMapper.map(kühlschrank);
         return ResponseEntity.ok(responseResource);
     }
-    @DeleteMapping("/{id}/item")
-    public ResponseEntity<?> komplettVerbraucht(@PathVariable Integer id) {
-
+    @DeleteMapping("/{idk}/item/{id}")
+    public ResponseEntity<?> komplettVerbraucht(@PathVariable Integer idk, @PathVariable Integer id) {
+        var kühlschrank = appService.itemEntfernen(idk, id);
         return ResponseEntity.ok().build();
     }
-    @PutMapping("/{id}/item")
-    public ResponseEntity<?> teilweiseVerbraucht(@PathVariable Integer id, @RequestParam int neueAnzahl) {
-        
-        return ResponseEntity.ok().build();
+    @PutMapping("/{idk}/item/{id}")
+    public ResponseEntity<KühlschrankResource> teilweiseVerbraucht(@PathVariable Integer idk, @PathVariable Integer id, @RequestBody UpdateItemRequest request) {
+        var kühlschrank = appService.itemTeilweiseVerbraucht(idk, id, request.neueAnzahl());
+        var responseResource = kühlschrankMapper.map(kühlschrank);
+        return ResponseEntity.ok(responseResource);
     }
 }

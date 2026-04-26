@@ -35,4 +35,14 @@ public class KühlschrankVerwaltungsService {
         kühlschrank.itemHinzufuegen(item);
         return kühlschrankRepository.save(kühlschrank);
     }
+    public Kühlschrank itemEntfernen(Integer kühlschrankId, Integer itemId) {
+        Kühlschrank kühlschrank = getKühlschrank(kühlschrankId);
+        kühlschrank.itemEntfernen(itemId);
+        return kühlschrankRepository.save(kühlschrank);
+    }
+    public Kühlschrank itemTeilweiseVerbraucht(Integer kühlschrankId, Integer itemId, int neueAnzahl) {
+        Kühlschrank kühlschrank = getKühlschrank(kühlschrankId);
+        kühlschrank.itemVerbrauchen(itemId, neueAnzahl);
+        return kühlschrankRepository.save(kühlschrank);
+    }
 }
