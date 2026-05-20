@@ -1,4 +1,4 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters;
+package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import java.util.List;
 public class KühlschrankDomainService {
 
     
-    public List<Item> abgelaufeneEntsorgenUndNachkaufen(Kühlschrank kühlschrank,
+    public void abgelaufeneEntsorgenUndNachkaufen(Kühlschrank kühlschrank,
                                                         Einkaufsliste einkaufsliste) {
         List<Item> abgelaufene = kühlschrank.getAbgelaufeneItems();
 
@@ -13,8 +13,6 @@ public class KühlschrankDomainService {
             einkaufsliste.schreibeAuf(item.getMenge().getAnzahl(), item.getLebensmittel().getName());
             kühlschrank.itemVerbrauchen(item.getId(), item.getMenge().getAnzahl());
         }
-
-        return abgelaufene;
     }
 
     public Kühlschrank einkaufVerarbeiten(Einkaufsliste einkaufsliste,

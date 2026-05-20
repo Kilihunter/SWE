@@ -50,13 +50,6 @@ public class Item {
         this.menge = new Menge(neueAnzahl, this.getEinheit());
     }
 
-    public void verlaengereHaltbarkeit(Haltbarkeitsdatum neuesDatum) {
-        if (neuesDatum == null || neuesDatum.istAbgelaufen()) {
-            throw new IllegalArgumentException("Ungültiges neues Haltbarkeitsdatum.");
-        }
-        this.haltbarkeit = neuesDatum;
-    }
-
     public Einheit getEinheit() {
         return menge.getEinheit();
     }

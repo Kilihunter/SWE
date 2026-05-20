@@ -1,6 +1,10 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters;
 
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.ItemResource;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.Item;
+
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Component;
 
 
@@ -12,7 +16,7 @@ public class ItemResourceMapper {
         String kategorie = item.getLebensmittel().getKategorie().name();
         int menge = item.getMenge().getAnzahl();
         String einheit = item.getMenge().getEinheit().name();
-        String haltbarkeit = item.getHaltbarkeit().getDatum().toString();
+        LocalDate haltbarkeit = item.getHaltbarkeit().getDatum();
 
         return new ItemResource(id, name, kategorie, menge, einheit, haltbarkeit);
     }

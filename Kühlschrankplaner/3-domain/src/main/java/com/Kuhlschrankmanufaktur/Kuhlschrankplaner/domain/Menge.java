@@ -5,9 +5,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
-/**
- * Value Object für eine Mengenangabe (Anzahl + Einheit).
- */
+
 @Embeddable
 public final class Menge {
 

@@ -2,7 +2,7 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
 
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.*;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 import java.time.LocalDate;
 
 @Service
@@ -22,6 +22,10 @@ public class KühlschrankVerwaltungsService {
     public Kühlschrank getKühlschrank(Integer id) {
         return kühlschrankRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Kühlschrank mit ID " + id + " nicht gefunden."));
+    }
+
+    public List<Kühlschrank> getAlleKühlschränke() {
+        return kühlschrankRepository.findAll();
     }
 
     public Kühlschrank itemHinzufügen(String lebensmittelName, String einheit, String kategorie, LocalDate haltbarBis, int anzahl, Integer kühlschrankId) {
@@ -45,4 +49,5 @@ public class KühlschrankVerwaltungsService {
         kühlschrank.itemVerbrauchen(itemId, neueAnzahl);
         return kühlschrankRepository.save(kühlschrank);
     }
+
 }

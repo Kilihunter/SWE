@@ -1,4 +1,7 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters;
+package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources;
+
+import java.time.LocalDate;
+
 public class ItemResource {
     
     public Integer id;
@@ -6,9 +9,9 @@ public class ItemResource {
     public String kategorie;
     public int menge;
     public String einheit;
-    public String haltbarkeit;
+    public LocalDate haltbarkeit;
 
-    public ItemResource(Integer id, String name, String kategorie, int menge, String einheit, String haltbarkeit) {
+    public ItemResource(Integer id, String name, String kategorie, int menge, String einheit, LocalDate haltbarkeit) {
         this.id = id;
         this.name = name;
         this.kategorie = kategorie;
@@ -23,7 +26,7 @@ public class ItemResource {
     public String getEinheit() {
         return einheit;
     }
-    public String getHaltbarkeit() {
+    public LocalDate getHaltbarkeit() {
         return haltbarkeit;
     }
     public Integer getId() {
