@@ -5,6 +5,7 @@ import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.KühlschrankResource
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.KühlschrankResource;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.ItemResourceMapper;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.ItemResource;
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.ItemErstellenResource;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class KühlschrankController {
         
     }
     @PostMapping("/{id}/item")
-    public ResponseEntity<KühlschrankResource> eingekauft(@PathVariable Integer id, @RequestBody ItemResource request) {
+    public ResponseEntity<KühlschrankResource> eingekauft(@PathVariable Integer id, @RequestBody ItemErstellenResource request) {
         var kühlschrank = appService.itemHinzufügen(
                 request.getName(),
                 request.getEinheit(),

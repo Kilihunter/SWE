@@ -52,16 +52,20 @@ public class Einkaufsliste {
     }
 
     public void eingekauft(int anzahl, String lebensmittelName) {
-        if (lebensmittelName == null || lebensmittelName.isBlank() || anzahl <= 0) return;
+        if (lebensmittelName == null || lebensmittelName.isBlank() || anzahl <= 0) {
+            return;
+        }
 
-        if (eintraege.containsKey(lebensmittelName)) {
-            int aktuelleAnzahl = eintraege.get(lebensmittelName);
+        String normalisierterName = lebensmittelName.trim();
+
+        if (eintraege.containsKey(normalisierterName)) {
+            int aktuelleAnzahl = eintraege.get(normalisierterName);
             int neueAnzahl = aktuelleAnzahl - anzahl;
 
             if (neueAnzahl <= 0) {
-                eintraege.remove(lebensmittelName);
+                eintraege.remove(normalisierterName);
             } else {
-                eintraege.put(lebensmittelName, neueAnzahl);
+                eintraege.put(normalisierterName, neueAnzahl);
             }
         }
     }

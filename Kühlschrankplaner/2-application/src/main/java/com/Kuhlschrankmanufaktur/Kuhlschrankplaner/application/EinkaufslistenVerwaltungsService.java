@@ -32,24 +32,40 @@ public class EinkaufslistenVerwaltungsService {
         return einkaufslisteRepository.findAll();
     }
 
-    public Einkaufsliste schreibeAuf(Integer einkaufslisteId, List<Item> items) {
+    public Einkaufsliste schreibeAuf(Integer einkaufslisteId, int anzahl, String lebensmittelName) {
         Einkaufsliste liste = getEinkaufsliste(einkaufslisteId);
-        for (Item item : items) {
-            liste.schreibeAuf(item.getMenge().getAnzahl(), item.getLebensmittel().getName());
-        }
-        return einkaufslisteRepository.save(liste);
+
+        liste.schreibeAuf(anzahl, lebensmittelName);
+
+    return einkaufslisteRepository.save(liste);
     }
-    public void einkaufVerarbeiten(Integer einkaufslisteId, Integer kühlschrankId, int anzahl, String lebensmittelName, LocalDate haltbarkeit, String kategorie, String einheit) {
+    public Einkaufsliste einkaufVerarbeiten(Integer einkaufslisteId, Integer kühlschrankId, int anzahl, String lebensmittelName, LocalDate haltbarkeit, String kategorie, String einheit) {
+
         Kühlschrank kühlschrank = kühlschrankRepository.findById(kühlschrankId)
-                .orElseThrow(() -> new IllegalArgumentException("Kühlschrank mit ID " + kühlschrankId + " nicht gefunden."));
-        KühlschrankDomainService kühlschrankDomainService = new KühlschrankDomainService();
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Kühlschrank mit ID " + kühlschrankId + " nicht gefunden."
+                ));
+
         Einkaufsliste liste = getEinkaufsliste(einkaufslisteId);
+
+        KühlschrankDomainService kühlschrankDomainService = new KühlschrankDomainService();
+
         Kategorie kat = Kategorie.valueOf(kategorie.toUpperCase());
         Einheit ein = Einheit.valueOf(einheit.toUpperCase());
         Haltbarkeitsdatum haltbarkeitsdatum = new Haltbarkeitsdatum(haltbarkeit);
         Lebensmittel lebensmittel = new Lebensmittel(lebensmittelName, kat, ein);
-        kühlschrank = kühlschrankDomainService.einkaufVerarbeiten(liste, kühlschrank, lebensmittel , haltbarkeitsdatum, anzahl, ein);
+
+        kühlschrank = kühlschrankDomainService.einkaufVerarbeiten(
+                liste,
+                kühlschrank,
+                lebensmittel,
+                haltbarkeitsdatum,
+                anzahl,
+                ein
+        );
+
         kühlschrankRepository.save(kühlschrank);
+        return einkaufslisteRepository.save(liste);
     }
     public void sachenDieNachgekauftWerdenMüssen(Integer kühlschrankId, Integer einkaufslisteId) {
         Kühlschrank kühlschrank = kühlschrankRepository.findById(kühlschrankId)
