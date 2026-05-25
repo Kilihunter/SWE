@@ -26,6 +26,9 @@ class KühlschrankVerwaltungsServiceTest {
     @Mock
     private KühlschrankRepository kühlschrankRepository;
 
+    @Mock
+    private ItemFactory itemFactory;
+
     @InjectMocks
     private KühlschrankVerwaltungsService service;
 

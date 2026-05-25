@@ -39,29 +39,74 @@ public class SearchVerwaltungsService {
     }
 
     
-    public List<Item> filterUndSortiereBestand(Integer kuehlschrankId, String kategorieStr, String status, String sortBy) {
-        Stream<Item> itemStream = getZielKuehlschraenke(kuehlschrankId).stream()
-                .flatMap(kuehlschrank -> kuehlschrank.getItems().stream());
+    public List<Item> filterUndSortiereBestand(
+            Integer kuehlschrankId,
+            String kategorieStr,
+            String status,
+            String sortBy) {
 
-        if (kategorieStr != null && !kategorieStr.isBlank()) {
-            Kategorie suchKategorie = Kategorie.valueOf(kategorieStr.toUpperCase());
-            itemStream = itemStream.filter(item -> item.getLebensmittel().getKategorie() == suchKategorie);
-        }
+        Stream<Item> itemStream = ladeItemsAusZielKuehlschraenken(kuehlschrankId);
 
-        if ("ABGELAUFEN".equalsIgnoreCase(status)) {
-            LocalDate heute = LocalDate.now();
-            itemStream = itemStream.filter(item -> item.getHaltbarkeit().getDatum().isBefore(heute));
-        } else if ("OK".equalsIgnoreCase(status)) {
-            LocalDate heute = LocalDate.now();
-            itemStream = itemStream.filter(item -> !item.getHaltbarkeit().getDatum().isBefore(heute));
-        }
-
-        if ("haltbarkeit".equalsIgnoreCase(sortBy)) {
-            itemStream = itemStream.sorted(Comparator.comparing(item -> item.getHaltbarkeit().getDatum()));
-        } else {
-            itemStream = itemStream.sorted(Comparator.comparing(item -> item.getLebensmittel().getName().toLowerCase()));
-        }
+        itemStream = filterNachKategorie(itemStream, kategorieStr);
+        itemStream = filterNachStatus(itemStream, status);
+        itemStream = sortiere(itemStream, sortBy);
 
         return itemStream.collect(Collectors.toList());
+    }
+
+    private List<Kühlschrank> ladeZielKuehlschraenke(Integer kuehlschrankId) {
+        if (kuehlschrankId != null) {
+            Kühlschrank kuehlschrank = repository.findById(kuehlschrankId)
+                    .orElseThrow(() -> new IllegalArgumentException("Kühlschrank nicht gefunden."));
+
+            return List.of(kuehlschrank);
+        }
+
+        return repository.findAll();
+    }
+
+    private Stream<Item> ladeItemsAusZielKuehlschraenken(Integer kuehlschrankId) {
+        return ladeZielKuehlschraenke(kuehlschrankId).stream()
+                .flatMap(kuehlschrank -> kuehlschrank.getItems().stream());
+    }
+
+    private Stream<Item> filterNachKategorie(Stream<Item> itemStream, String kategorieStr) {
+        if (kategorieStr == null || kategorieStr.isBlank()) {
+            return itemStream;
+        }
+
+        Kategorie suchKategorie = Kategorie.valueOf(kategorieStr.toUpperCase());
+
+        return itemStream.filter(item ->
+                item.getLebensmittel().getKategorie() == suchKategorie
+        );
+    }
+
+    private Stream<Item> filterNachStatus(Stream<Item> itemStream, String status) {
+        if ("ABGELAUFEN".equalsIgnoreCase(status)) {
+            return itemStream.filter(this::istAbgelaufen);
+        }
+
+        if ("OK".equalsIgnoreCase(status)) {
+            return itemStream.filter(item -> !istAbgelaufen(item));
+        }
+
+        return itemStream;
+    }
+
+    private boolean istAbgelaufen(Item item) {
+        return item.getHaltbarkeit().getDatum().isBefore(LocalDate.now());
+    }
+
+    private Stream<Item> sortiere(Stream<Item> itemStream, String sortBy) {
+        if ("haltbarkeit".equalsIgnoreCase(sortBy)) {
+            return itemStream.sorted(
+                    Comparator.comparing(item -> item.getHaltbarkeit().getDatum())
+            );
+        }
+
+        return itemStream.sorted(
+                Comparator.comparing(item -> item.getLebensmittel().getName().toLowerCase())
+        );
     }
 }

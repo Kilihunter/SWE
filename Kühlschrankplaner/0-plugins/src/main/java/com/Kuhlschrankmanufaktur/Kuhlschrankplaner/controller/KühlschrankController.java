@@ -5,6 +5,7 @@ import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.KühlschrankResource
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.KühlschrankResource;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.ItemErstellenResource;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.KühlschrankErstellenResource;
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.ItemResource;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,4 +69,20 @@ public class KühlschrankController {
         var responseResource = kühlschrankMapper.map(kühlschrank);
         return ResponseEntity.ok(responseResource);
     }
+    @PutMapping("/{kId}/item/korrektur")
+        public ResponseEntity<KühlschrankResource> itemKorrigieren( @PathVariable Integer kId, @RequestBody ItemResource request) {
+
+            var kühlschrank = appService.itemKorrigieren(
+                    kId,
+                    request.getItemid(),
+                    request.getName(),
+                    request.getEinheit(),
+                    request.getKategorie(),
+                    request.getHaltbarkeit(),
+                    request.getMenge()
+            );
+
+            var responseResource = kühlschrankMapper.map(kühlschrank);
+            return ResponseEntity.ok(responseResource);
+        }
 }

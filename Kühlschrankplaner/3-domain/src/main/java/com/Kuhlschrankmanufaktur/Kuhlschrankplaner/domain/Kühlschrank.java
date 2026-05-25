@@ -94,4 +94,19 @@ public class Kühlschrank {
         }
         return Collections.unmodifiableMap(bestand);
     }
+    public void itemKorrigieren(Integer itemId, Item korrigiertesItem) {
+        Item gefundenesItem = items.stream()
+                .filter(item -> item.getId() != null && item.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Item mit ID " + itemId + " nicht gefunden."
+                ));
+
+        gefundenesItem.korrigieren(
+                korrigiertesItem.getLebensmittel(),
+                korrigiertesItem.getHaltbarkeit(),
+                korrigiertesItem.getMenge().getAnzahl(),
+                korrigiertesItem.getMenge().getEinheit()
+        );
+    }   
 }

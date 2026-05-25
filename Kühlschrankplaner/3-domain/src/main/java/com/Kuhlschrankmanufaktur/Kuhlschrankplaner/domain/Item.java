@@ -47,11 +47,13 @@ public class Item {
         if (neueAnzahl <= 0) {
             throw new IllegalArgumentException("Die neue Anzahl muss größer als 0 sein. Zum Entfernen bitte Löschfunktion nutzen.");
         }
-        this.menge = new Menge(neueAnzahl, this.getEinheit());
+        this.menge = new Menge(neueAnzahl, this.menge.getEinheit());
     }
-
-    public Einheit getEinheit() {
-        return menge.getEinheit();
+    public void korrigieren(Lebensmittel neuesLebensmittel, Haltbarkeitsdatum neueHaltbarkeit, int neueAnzahl, Einheit neueEinheit) {
+         validateState(neuesLebensmittel, neueHaltbarkeit, neueAnzahl);
+            this.lebensmittel = neuesLebensmittel;
+            this.haltbarkeit = neueHaltbarkeit;
+            this.menge = new Menge(neueAnzahl, neueEinheit);
     }
     public boolean istAbgelaufen() {
         return haltbarkeit.istAbgelaufen();

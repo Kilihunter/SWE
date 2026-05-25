@@ -31,13 +31,15 @@ public class KühlschrankVerwaltungsService {
     }
 
     public Kühlschrank itemHinzufügen(String lebensmittelName, String einheit, String kategorie, LocalDate haltbarBis, int anzahl, Integer kühlschrankId) {
-        Kategorie kat = Kategorie.valueOf(kategorie.toUpperCase());
-        Einheit ein = Einheit.valueOf(einheit.toUpperCase());
-        Lebensmittel lebensmittel = new Lebensmittel(lebensmittelName, kat, ein);
-        Haltbarkeitsdatum haltbarkeit = new Haltbarkeitsdatum(haltbarBis);
-
         Kühlschrank kühlschrank = getKühlschrank(kühlschrankId);
-        Item item = new Item(lebensmittel, haltbarkeit, anzahl, ein);
+        Item item = itemFactory.erstelleItem(
+                    lebensmittelName,
+                    einheit,
+                    kategorie,
+                    haltbarBis,
+                    anzahl
+            );
+
         kühlschrank.itemHinzufuegen(item);
         return kühlschrankRepository.save(kühlschrank);
     }
@@ -49,6 +51,16 @@ public class KühlschrankVerwaltungsService {
     public Kühlschrank itemTeilweiseVerbraucht(Integer kühlschrankId, Integer itemId, int neueAnzahl) {
         Kühlschrank kühlschrank = getKühlschrank(kühlschrankId);
         kühlschrank.itemVerbrauchen(itemId, neueAnzahl);
+        return kühlschrankRepository.save(kühlschrank);
+    }
+    public Kühlschrank itemKorrigieren( Integer kühlschrankId, Integer itemId, String lebensmittelName, String einheit, String kategorie, LocalDate haltbarkeit, int anzahl) {
+
+        Kühlschrank kühlschrank = getKühlschrank(kühlschrankId);
+
+        Item korrigiertesItem = itemFactory.erstelleItem( lebensmittelName, einheit, kategorie, haltbarkeit, anzahl);
+
+        kühlschrank.itemKorrigieren(itemId, korrigiertesItem);
+
         return kühlschrankRepository.save(kühlschrank);
     }
 
