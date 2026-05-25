@@ -13,7 +13,7 @@ public class KühlschrankVerwaltungsService {
 
     public KühlschrankVerwaltungsService(KühlschrankRepository kühlschrankRepository, ItemFactory itemFactory) {
         this.kühlschrankRepository = kühlschrankRepository;
-        this.itemFactory = new ItemFactory();
+        this.itemFactory = itemFactory;
     }
 
     public Kühlschrank kühlschrankAnlegen(String name) {
