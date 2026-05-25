@@ -48,32 +48,32 @@ public class EinkaufslistenController {
     }
 
     return ResponseEntity.ok(
-            mapper.map(service.getEinkaufsliste(einkaufslisteId)) // könnte ein smell sein aber bin mir nich ganz sicher 
+            mapper.map(service.getEinkaufsliste(einkaufslisteId)) 
     );
     }
-     @PostMapping("/{einkaufslisteId}/nachkaufen-aus-kuehlschrank/{kuehlschrankId}")
+     @PostMapping("/{einkaufslisteId}/nachkaufen-aus-kuehlschrank/{kId}")
     public ResponseEntity<EinkaufslisteResource> sachenDieNachgekauftWerdenMuessen(
             @PathVariable Integer einkaufslisteId,
-            @PathVariable Integer kühlschrankId) {
+            @PathVariable Integer kId) {
 
        Einkaufsliste einkaufsliste =  service.sachenDieNachgekauftWerdenMüssen(
-                kühlschrankId,
+                kId,
                 einkaufslisteId
         );
 
         return ResponseEntity.ok(mapper.map(einkaufsliste));
     }
 
-    @PostMapping("/{einkaufslisteId}/verarbeiten/kühlschrank/{kühlschrankId}")
+    @PostMapping("/{einkaufslisteId}/verarbeiten/kühlschrank/{kId}")
     public ResponseEntity<EinkaufslisteResource> einkaufVerarbeiten(
             @PathVariable Integer einkaufslisteId,
-            @PathVariable Integer kühlschrankId,
+            @PathVariable Integer kId,
             @RequestBody List<ItemErstellenResource> items) {
         Einkaufsliste einkaufsliste = service.getEinkaufsliste(einkaufslisteId);
         for (ItemErstellenResource item : items) {
             einkaufsliste = service.einkaufVerarbeiten(
                     einkaufslisteId,
-                    kühlschrankId,
+                    kId,
                     item.getMenge(),
                     item.getName(),
                     item.getHaltbarkeit(),

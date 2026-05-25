@@ -54,13 +54,9 @@ public class KühlschrankVerwaltungsService {
         return kühlschrankRepository.save(kühlschrank);
     }
     public Kühlschrank itemKorrigieren( Integer kühlschrankId, Integer itemId, String lebensmittelName, String einheit, String kategorie, LocalDate haltbarkeit, int anzahl) {
-
         Kühlschrank kühlschrank = getKühlschrank(kühlschrankId);
-
         Item korrigiertesItem = itemFactory.erstelleItem( lebensmittelName, einheit, kategorie, haltbarkeit, anzahl);
-
         kühlschrank.itemKorrigieren(itemId, korrigiertesItem);
-
         return kühlschrankRepository.save(kühlschrank);
     }
 
