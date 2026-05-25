@@ -11,11 +11,14 @@ public class EinkaufslistenVerwaltungsService {
 
     private final EinkaufslisteRepository einkaufslisteRepository;
     private final KühlschrankRepository kühlschrankRepository;
+    private final ItemFactory itemFactory;
 
     public EinkaufslistenVerwaltungsService(EinkaufslisteRepository einkaufslisteRepository,
-                                             KühlschrankRepository kühlschrankRepository) {
+                                             KühlschrankRepository kühlschrankRepository,
+                                             ItemFactory itemFactory) {
         this.einkaufslisteRepository = einkaufslisteRepository;
         this.kühlschrankRepository = kühlschrankRepository;
+        this.itemFactory = itemFactory;
     }
 
     public Einkaufsliste einkaufslisteAnlegen(String name) {
@@ -39,35 +42,40 @@ public class EinkaufslistenVerwaltungsService {
 
     return einkaufslisteRepository.save(liste);
     }
-    public Einkaufsliste einkaufVerarbeiten(Integer einkaufslisteId, Integer kühlschrankId, int anzahl, String lebensmittelName, LocalDate haltbarkeit, String kategorie, String einheit) {
+    public Einkaufsliste einkaufVerarbeiten(
+            Integer einkaufslisteId,
+            Integer kühlschrankId,
+            int anzahl,
+            String lebensmittelName,
+            LocalDate haltbarkeit,
+            String kategorie,
+            String einheit) {
 
-        Kühlschrank kühlschrank = kühlschrankRepository.findById(kühlschrankId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Kühlschrank mit ID " + kühlschrankId + " nicht gefunden."
-                ));
+        Kühlschrank kühlschrank = ladeKühlschrank(kühlschrankId);
+        Einkaufsliste einkaufsliste = getEinkaufsliste(einkaufslisteId);
 
-        Einkaufsliste liste = getEinkaufsliste(einkaufslisteId);
+        Item item = itemFactory.erstelleItem(
+                lebensmittelName,
+                einheit,
+                kategorie,
+                haltbarkeit,
+                anzahl
+        );
 
         KühlschrankDomainService kühlschrankDomainService = new KühlschrankDomainService();
 
-        Kategorie kat = Kategorie.valueOf(kategorie.toUpperCase());
-        Einheit ein = Einheit.valueOf(einheit.toUpperCase());
-        Haltbarkeitsdatum haltbarkeitsdatum = new Haltbarkeitsdatum(haltbarkeit);
-        Lebensmittel lebensmittel = new Lebensmittel(lebensmittelName, kat, ein);
-
-        kühlschrank = kühlschrankDomainService.einkaufVerarbeiten(
-                liste,
+        kühlschrankDomainService.einkaufVerarbeiten(
+                einkaufsliste,
                 kühlschrank,
-                lebensmittel,
-                haltbarkeitsdatum,
-                anzahl,
-                ein
+                item
         );
 
         kühlschrankRepository.save(kühlschrank);
-        return einkaufslisteRepository.save(liste);
+
+        return einkaufslisteRepository.save(einkaufsliste);
     }
-    public void sachenDieNachgekauftWerdenMüssen(Integer kühlschrankId, Integer einkaufslisteId) {
+
+    public Einkaufsliste sachenDieNachgekauftWerdenMüssen(Integer kühlschrankId, Integer einkaufslisteId) {
         Kühlschrank kühlschrank = kühlschrankRepository.findById(kühlschrankId)
                 .orElseThrow(() -> new IllegalArgumentException("Kühlschrank mit ID " + kühlschrankId + " nicht gefunden."));
         Einkaufsliste einkaufsliste = einkaufslisteRepository.findById(einkaufslisteId)
@@ -75,6 +83,12 @@ public class EinkaufslistenVerwaltungsService {
         KühlschrankDomainService kühlschrankDomainService = new KühlschrankDomainService();
         kühlschrankDomainService.abgelaufeneEntsorgenUndNachkaufen(kühlschrank, einkaufsliste);
         kühlschrankRepository.save(kühlschrank);
-        einkaufslisteRepository.save(einkaufsliste);
+        return einkaufslisteRepository.save(einkaufsliste);
+    }
+    private Kühlschrank ladeKühlschrank(Integer kühlschrankId) {
+        return kühlschrankRepository.findById(kühlschrankId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Kühlschrank mit ID " + kühlschrankId + " nicht gefunden."
+                ));
     }
 }

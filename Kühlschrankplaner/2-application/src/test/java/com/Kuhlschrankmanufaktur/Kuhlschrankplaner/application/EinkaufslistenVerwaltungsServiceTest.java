@@ -28,6 +28,10 @@ class EinkaufslistenVerwaltungsServiceTest {
     @Mock
     private KühlschrankRepository kühlschrankRepository;
 
+
+    @Mock
+    private ItemFactory itemFactory;
+
     @InjectMocks
     private EinkaufslistenVerwaltungsService service;
 

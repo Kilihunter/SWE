@@ -3,14 +3,12 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.controller;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application.KühlschrankVerwaltungsService;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.KühlschrankResourceMapper;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.KühlschrankResource;
-import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.ItemResourceMapper;
-import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.ItemResource;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.ItemErstellenResource;
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.KühlschrankErstellenResource;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.time.LocalDate;
+
 
 @RestController
 @RequestMapping("/api/kuehlschrank")
@@ -26,8 +24,8 @@ public class KühlschrankController {
     }
 
     @PostMapping
-    public ResponseEntity<KühlschrankResource> erstelleKühlschrank(@RequestBody String name) {
-        var neuerKühlschrank = appService.kühlschrankAnlegen(name);
+    public ResponseEntity<KühlschrankResource> erstelleKühlschrank(@RequestBody KühlschrankErstellenResource request) {
+        var neuerKühlschrank = appService.kühlschrankAnlegen(request.getName());
         var responseResource = kühlschrankMapper.map(neuerKühlschrank);
         return ResponseEntity.ok(responseResource);
     }
@@ -62,11 +60,11 @@ public class KühlschrankController {
     @DeleteMapping("/{idk}/item/{id}")
     public ResponseEntity<?> komplettVerbraucht(@PathVariable Integer idk, @PathVariable Integer id) {
         var kühlschrank = appService.itemEntfernen(idk, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(kühlschrankMapper.map(kühlschrank));
     }
     @PutMapping("/{idk}/item/{id}")
-    public ResponseEntity<KühlschrankResource> teilweiseVerbraucht(@PathVariable Integer idk, @PathVariable Integer id, @RequestBody int neueAnzahl) {
-        var kühlschrank = appService.itemTeilweiseVerbraucht(idk, id, neueAnzahl);
+    public ResponseEntity<KühlschrankResource> teilweiseVerbraucht(@PathVariable Integer idk, @PathVariable Integer id, @RequestBody int verbrauchteAnzahl) {
+        var kühlschrank = appService.itemTeilweiseVerbraucht(idk, id, verbrauchteAnzahl);
         var responseResource = kühlschrankMapper.map(kühlschrank);
         return ResponseEntity.ok(responseResource);
     }

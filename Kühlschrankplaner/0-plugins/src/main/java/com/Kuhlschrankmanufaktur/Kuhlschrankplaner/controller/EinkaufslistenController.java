@@ -6,6 +6,7 @@ import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.EinkaufslisteResourc
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.EinkaufslisteResource;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.EinkaufslistenEintragErstellenResource;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.ItemErstellenResource;
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.adapters.Resources.EinkaufslistenErstellResource;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,8 @@ public class EinkaufslistenController {
 
     @PostMapping
     public ResponseEntity<EinkaufslisteResource> erstelleEinkaufsliste(
-            @RequestBody String name) {
-        var Einkaufsliste = service.einkaufslisteAnlegen(name);
+            @RequestBody EinkaufslistenErstellResource request) {
+        var Einkaufsliste = service.einkaufslisteAnlegen(request.getName());
         return ResponseEntity.ok(mapper.map(Einkaufsliste));
     }
     @PostMapping("/{einkaufslisteId}/eintraege")
@@ -55,12 +56,12 @@ public class EinkaufslistenController {
             @PathVariable Integer einkaufslisteId,
             @PathVariable Integer kühlschrankId) {
 
-        service.sachenDieNachgekauftWerdenMüssen(
+       Einkaufsliste einkaufsliste =  service.sachenDieNachgekauftWerdenMüssen(
                 kühlschrankId,
                 einkaufslisteId
         );
 
-        return ResponseEntity.ok(mapper.map(service.getEinkaufsliste(einkaufslisteId)));
+        return ResponseEntity.ok(mapper.map(einkaufsliste));
     }
 
     @PostMapping("/{einkaufslisteId}/verarbeiten/kühlschrank/{kühlschrankId}")

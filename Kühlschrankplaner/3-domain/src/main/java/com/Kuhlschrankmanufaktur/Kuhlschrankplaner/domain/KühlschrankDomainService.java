@@ -15,16 +15,15 @@ public class KühlschrankDomainService {
         }
     }
 
-    public Kühlschrank einkaufVerarbeiten(Einkaufsliste einkaufsliste,
-                                   Kühlschrank kühlschrank,
-                                   Lebensmittel lebensmittel,
-                                   Haltbarkeitsdatum haltbarkeit,
-                                   int anzahl,
-                                   Einheit einheit) {
-        einkaufsliste.eingekauft(anzahl, lebensmittel.getName());
+    public Kühlschrank einkaufVerarbeiten( Einkaufsliste einkaufsliste, Kühlschrank kühlschrank, Item item) {
 
-        Item item = new Item(lebensmittel, haltbarkeit, anzahl, einheit);
+        einkaufsliste.eingekauft(
+                item.getMenge().getAnzahl(),
+                item.getLebensmittel().getName()
+        );
+
         kühlschrank.itemHinzufuegen(item);
+
         return kühlschrank;
     }
 }

@@ -9,9 +9,11 @@ import java.time.LocalDate;
 public class KühlschrankVerwaltungsService {
 
     private final KühlschrankRepository kühlschrankRepository;
+    private final ItemFactory itemFactory;
 
-    public KühlschrankVerwaltungsService(KühlschrankRepository kühlschrankRepository) {
+    public KühlschrankVerwaltungsService(KühlschrankRepository kühlschrankRepository, ItemFactory itemFactory) {
         this.kühlschrankRepository = kühlschrankRepository;
+        this.itemFactory = new ItemFactory();
     }
 
     public Kühlschrank kühlschrankAnlegen(String name) {
