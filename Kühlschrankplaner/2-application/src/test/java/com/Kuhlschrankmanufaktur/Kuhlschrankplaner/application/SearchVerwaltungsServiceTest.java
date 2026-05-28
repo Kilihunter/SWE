@@ -46,7 +46,7 @@ class SearchVerwaltungsServiceTest {
 
         List<Item> result = service.findeAblaufendeUndAbgelaufeneItems(1, 3);
 
-        assertThat(result).containsExactly(abgelaufen,morgen, inDreiTagen);
+        assertThat(result).containsExactly(abgelaufen, morgen, inDreiTagen);
     }
 
     @Test

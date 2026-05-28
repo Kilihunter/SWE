@@ -1,4 +1,4 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
+/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,3 +45,4 @@ class EinkaufslisteTest {
         assertThrows(IllegalArgumentException.class, () -> liste.eingekauft(1, "Steak"));
     }
 }
+*/

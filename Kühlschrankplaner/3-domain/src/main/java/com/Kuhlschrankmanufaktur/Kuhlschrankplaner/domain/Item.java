@@ -10,14 +10,13 @@ public class Item {
     @GeneratedValue
     private Integer id;
 
-    @Embedded
+    @ManyToOne
     private Lebensmittel lebensmittel;
 
     @Embedded
     private Haltbarkeitsdatum haltbarkeit;
 
-    @Embedded
-    private Menge menge;
+    private Integer anzahl;
 
     @ManyToOne
     @JoinColumn(name = "kuehlschrank_id")
@@ -25,12 +24,12 @@ public class Item {
 
     protected Item() { }
 
-    public Item(Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl, Einheit einheit) {
+    public Item(Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl) {
         validateState(lebensmittel, haltbarkeit, anzahl);
 
         this.lebensmittel = lebensmittel;
         this.haltbarkeit = haltbarkeit;
-        this.menge = new Menge(anzahl, einheit);
+        this.anzahl = anzahl;
     }
 
     private void validateState(Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl) {
@@ -45,15 +44,22 @@ public class Item {
 
     public void mengeAnpassen(int neueAnzahl) {
         if (neueAnzahl <= 0) {
-            throw new IllegalArgumentException("Die neue Anzahl muss größer als 0 sein. Zum Entfernen bitte Löschfunktion nutzen.");
+            throw new IllegalArgumentException("Die neue Anzahl muss größer als 0 sein.");
         }
-        this.menge = new Menge(neueAnzahl, this.menge.getEinheit());
+        this.anzahl = neueAnzahl;
+    }
+
+    public void lebensmittelAnpassen(Lebensmittel neuesLebensmittel) {
+        if (neuesLebensmittel == null) {
+            throw new IllegalArgumentException("Lebensmittel darf nicht null sein.");
+        }
+        this.lebensmittel = neuesLebensmittel;
     }
     public void korrigieren(Lebensmittel neuesLebensmittel, Haltbarkeitsdatum neueHaltbarkeit, int neueAnzahl, Einheit neueEinheit) {
          validateState(neuesLebensmittel, neueHaltbarkeit, neueAnzahl);
             this.lebensmittel = neuesLebensmittel;
             this.haltbarkeit = neueHaltbarkeit;
-            this.menge = new Menge(neueAnzahl, neueEinheit);
+            this.anzahl = neueAnzahl;
     }
     public boolean istAbgelaufen() {
         return haltbarkeit.istAbgelaufen();
@@ -74,7 +80,7 @@ public class Item {
     public Integer getId() { return id; }
     public Lebensmittel getLebensmittel() { return lebensmittel; }
     public Haltbarkeitsdatum getHaltbarkeit() { return haltbarkeit; }
-    public Menge getMenge() { return menge; }
+    public Integer getAnzahl() { return anzahl; }
     public Kühlschrank getKühlschrank() { return kühlschrank; }
 
     void setKühlschrank(Kühlschrank kühlschrank) {

@@ -5,37 +5,28 @@ import java.time.LocalDate;
 public class ItemResource {
     
     public Integer Itemid;
-    public String name;
-    public String kategorie;
-    public int menge;
-    public String einheit;
+    public String lebensmittelName;
+    public Integer anzahl;
     public LocalDate haltbarkeit;
 
-    public ItemResource(Integer id, String name, String kategorie, int menge, String einheit, LocalDate haltbarkeit) {
+    public ItemResource(Integer id, String lebensmittelName, Integer anzahl, LocalDate haltbarkeit) {
         this.Itemid = id;
-        this.name = name;
-        this.kategorie = kategorie;
-        this.menge = menge;
-        this.einheit = einheit;
+        this.lebensmittelName = lebensmittelName;
+        this.anzahl = anzahl;
         this.haltbarkeit = haltbarkeit;
     }
 
-    public String getKategorie() {
-        return kategorie;
-    }
-    public String getEinheit() {
-        return einheit;
-    }
+    
     public LocalDate getHaltbarkeit() {
         return haltbarkeit;
     }
     public Integer getItemid() {
         return Itemid;
     }
-    public int getMenge() {
-        return menge;
+    public Integer getAnzahl() {
+        return anzahl;
     }
-    public String getName() {
-        return name;
+    public String getLebensmittelName() {
+        return lebensmittelName;
     }
 }

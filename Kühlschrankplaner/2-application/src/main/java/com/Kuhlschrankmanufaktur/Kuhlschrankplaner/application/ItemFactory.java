@@ -13,35 +13,18 @@ import java.time.LocalDate;
 public class ItemFactory {
 
     public Item erstelleItem(
-            String lebensmittelName,
-            String einheit,
-            String kategorie,
+            Lebensmittel lebensmittel,
             LocalDate haltbarkeit,
             int anzahl) {
 
-        Einheit einheitDomain = parseEinheit(einheit);
-        Kategorie kategorieDomain = parseKategorie(kategorie);
-
-        Lebensmittel lebensmittel = new Lebensmittel(
-                lebensmittelName,
-                kategorieDomain
-        );
 
         Haltbarkeitsdatum haltbarkeitsdatum = new Haltbarkeitsdatum(haltbarkeit);
 
         return new Item(
                 lebensmittel,
                 haltbarkeitsdatum,
-                anzahl,
-                einheitDomain
+                anzahl
         );
     }
 
-    private Kategorie parseKategorie(String kategorie) {
-        return Kategorie.valueOf(kategorie.toUpperCase());
-    }
-
-    private Einheit parseEinheit(String einheit) {
-        return Einheit.valueOf(einheit.toUpperCase());
-    }
 }

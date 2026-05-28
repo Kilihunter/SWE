@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/search")
+@RequestMapping("/search")
 public class SearchController {
     
     private final SearchVerwaltungsService queryService;
@@ -23,8 +23,8 @@ public class SearchController {
     }
 
     
-    @GetMapping("/ablaufend")
-    public ResponseEntity<List<ItemResource>> getAblaufendeItems(
+    @GetMapping("/ablaufendUndAbgelaufen")
+    public ResponseEntity<List<ItemResource>> getAblaufendeUndAbgelaufeneItems(
             @RequestParam(required = false) Integer kuehlschrankId, 
             @RequestParam(defaultValue = "3") int tageBisAblauf    
     ) {

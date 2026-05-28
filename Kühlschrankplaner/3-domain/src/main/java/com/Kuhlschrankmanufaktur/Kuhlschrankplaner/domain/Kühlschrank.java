@@ -2,9 +2,7 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -49,38 +47,30 @@ public class Kühlschrank {
         item.setKühlschrank(this);
     }
 
-    public void itemVerbrauchen(Integer itemId, int verbrauchteAnzahl) {
-        Item gefundenesItem = items.stream()
-                .filter(item -> item.getId() != null && item.getId().equals(itemId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Item mit ID " + itemId + " nicht gefunden."));
+    public void itemVerbrauchen(Item item, int verbrauchteAnzahl) {
         
         if (verbrauchteAnzahl <= 0) {
             throw new IllegalArgumentException("Verbrauchte Anzahl muss positiv sein.");
         }
-        int neueAnzahl = gefundenesItem.getMenge().getAnzahl() - verbrauchteAnzahl;
+        int neueAnzahl = item.getAnzahl() - verbrauchteAnzahl;
 
         if (neueAnzahl > 0) {
-            gefundenesItem.mengeAnpassen(neueAnzahl);
+            item.mengeAnpassen(neueAnzahl);
         } else if (neueAnzahl < 0) {
             throw new IllegalArgumentException("Es können nicht mehr Items verbraucht werden als vorhanden sind.");
         } else {
-            this.itemEntfernen(itemId);
+            this.itemEntfernen(item);
         }
     }
-    public void itemEntfernen(Integer itemId) {
-        Item itemZumEntfernen = items.stream()
-                .filter(item -> item.getId() != null && item.getId().equals(itemId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Item mit ID " + itemId + " nicht gefunden."));
+    public void itemEntfernen(Item itemZumEntfernen) {
         items.remove(itemZumEntfernen);
         itemZumEntfernen.setKühlschrank(null);
     }
 
-    public Integer bestandVon(String lebensmittelName) {
+    public Integer bestandVon(Lebensmittel lebensmittel) {
         return items.stream()
-                .filter(i -> i.getLebensmittel().getName().equalsIgnoreCase(lebensmittelName))
-                .mapToInt(i -> i.getMenge().getAnzahl())
+                .filter(i -> i.getLebensmittel().equals(lebensmittel))
+                .mapToInt(Item::getAnzahl)
                 .sum();
     }
 
@@ -90,26 +80,24 @@ public class Kühlschrank {
                 .toList();
     }
 
-    public Map<Lebensmittel, Integer> getBestandUebersicht() {
-        Map<Lebensmittel, Integer> bestand = new HashMap<>();
-        for (Item item : items) {
-            bestand.merge(item.getLebensmittel(), item.getMenge().getAnzahl(), (a, b) -> a + b);
-        }
-        return Collections.unmodifiableMap(bestand);
+    public List<Item> getBestandUebersicht() {
+        return items;
     }
-    public void itemKorrigieren(Integer itemId, Item korrigiertesItem) {
-        Item gefundenesItem = items.stream()
+    public void itemKorrigieren(Item item, Item korrigiertesItem) {
+
+        item.korrigieren(
+                korrigiertesItem.getLebensmittel(),
+                korrigiertesItem.getHaltbarkeit(),
+                korrigiertesItem.getAnzahl(),
+                korrigiertesItem.getLebensmittel().getEinheit()
+        );
+    }   
+    public Item findeItemNachId(Integer itemId) {
+        return items.stream()
                 .filter(item -> item.getId() != null && item.getId().equals(itemId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Item mit ID " + itemId + " nicht gefunden."
                 ));
-
-        gefundenesItem.korrigieren(
-                korrigiertesItem.getLebensmittel(),
-                korrigiertesItem.getHaltbarkeit(),
-                korrigiertesItem.getMenge().getAnzahl(),
-                korrigiertesItem.getMenge().getEinheit()
-        );
-    }   
+    }
 }

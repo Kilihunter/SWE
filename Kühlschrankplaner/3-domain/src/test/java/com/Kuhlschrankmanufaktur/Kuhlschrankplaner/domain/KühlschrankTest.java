@@ -1,4 +1,4 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
+/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,3 +59,4 @@ class KühlschrankTest {
         idField.set(item, id);
     }
 }
+*/

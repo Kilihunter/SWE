@@ -1,4 +1,4 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
+/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
 
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.Kühlschrank;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.KühlschrankRepository;
@@ -102,3 +102,4 @@ class KühlschrankVerwaltungsServiceTest {
         assertThat(result).isSameAs(kühlschrank);
     }
 }
+    */

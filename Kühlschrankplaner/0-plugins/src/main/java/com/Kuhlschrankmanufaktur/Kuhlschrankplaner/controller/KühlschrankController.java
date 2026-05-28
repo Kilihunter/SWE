@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/kuehlschrank")
+@RequestMapping("/kuehlschrank")
 public class KühlschrankController {
 
     private final KühlschrankVerwaltungsService appService;
@@ -48,38 +48,34 @@ public class KühlschrankController {
     @PostMapping("/{id}/item")
     public ResponseEntity<KühlschrankResource> eingekauft(@PathVariable Integer id, @RequestBody ItemErstellenResource request) {
         var kühlschrank = appService.itemHinzufügen(
-                request.getName(),
-                request.getEinheit(),
-                request.getKategorie(),
+                request.getLebensmittelName(),
                 request.getHaltbarkeit(),
-                request.getMenge(),
+                request.getAnzahl(),
                 id
         );
         var responseResource = kühlschrankMapper.map(kühlschrank);
         return ResponseEntity.ok(responseResource);
     }
-    @DeleteMapping("/{idk}/item/{id}")
-    public ResponseEntity<?> komplettVerbraucht(@PathVariable Integer idk, @PathVariable Integer id) {
-        var kühlschrank = appService.itemEntfernen(idk, id);
+    @DeleteMapping("/{kuehlschrankId}/item/{id}")
+    public ResponseEntity<?> komplettVerbraucht(@PathVariable Integer kuehlschrankId, @PathVariable Integer id) {
+        var kühlschrank = appService.itemEntfernen(kuehlschrankId, id);
         return ResponseEntity.ok(kühlschrankMapper.map(kühlschrank));
     }
-    @PutMapping("/{idk}/item/{id}")
-    public ResponseEntity<KühlschrankResource> teilweiseVerbraucht(@PathVariable Integer idk, @PathVariable Integer id, @RequestBody int verbrauchteAnzahl) {
-        var kühlschrank = appService.itemTeilweiseVerbraucht(idk, id, verbrauchteAnzahl);
+    @PutMapping("/{kuehlschrankId}/item/{id}/anzahl/{verbrauchteAnzahl}")
+    public ResponseEntity<KühlschrankResource> teilweiseVerbraucht(@PathVariable Integer kuehlschrankId, @PathVariable Integer id, @PathVariable int verbrauchteAnzahl) {
+        var kühlschrank = appService.itemTeilweiseVerbraucht(kuehlschrankId, id, verbrauchteAnzahl);
         var responseResource = kühlschrankMapper.map(kühlschrank);
         return ResponseEntity.ok(responseResource);
     }
-    @PutMapping("/{kId}/item/korrektur")
-        public ResponseEntity<KühlschrankResource> itemKorrigieren( @PathVariable Integer kId, @RequestBody ItemResource request) {
+    @PutMapping("/{kuehlschrankId}/item/korrektur")
+        public ResponseEntity<KühlschrankResource> itemKorrigieren( @PathVariable Integer kuehlschrankId, @RequestBody ItemResource request) {
 
             var kühlschrank = appService.itemKorrigieren(
-                    kId,
+                    kuehlschrankId,
                     request.getItemid(),
-                    request.getName(),
-                    request.getEinheit(),
-                    request.getKategorie(),
+                    request.getLebensmittelName(),
                     request.getHaltbarkeit(),
-                    request.getMenge()
+                    request.getAnzahl()
             );
 
             var responseResource = kühlschrankMapper.map(kühlschrank);

@@ -1,25 +1,29 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class KühlschrankDomainService {
 
     
-    public void abgelaufeneEntsorgenUndNachkaufen(Kühlschrank kühlschrank,
+    public void abgelaufeneEntsorgenUndNachkaufen(List<Kühlschrank> kühlschränke,
                                                         Einkaufsliste einkaufsliste) {
-        List<Item> abgelaufene = kühlschrank.getAbgelaufeneItems();
+        for (Kühlschrank kühlschrank : kühlschränke) {
+            List<Item> abgelaufene = kühlschrank.getAbgelaufeneItems();
 
-        for (Item item : abgelaufene) {
-            einkaufsliste.schreibeAuf(item.getMenge().getAnzahl(), item.getLebensmittel().getName());
-            kühlschrank.itemVerbrauchen(item.getId(), item.getMenge().getAnzahl());
+            for (Item item : abgelaufene) {
+                einkaufsliste.schreibeAuf(item.getAnzahl(), item.getLebensmittel());
+                kühlschrank.itemVerbrauchen(item, item.getAnzahl());
+            }
         }
     }
 
     public Kühlschrank einkaufVerarbeiten( Einkaufsliste einkaufsliste, Kühlschrank kühlschrank, Item item) {
 
         einkaufsliste.eingekauft(
-                item.getMenge().getAnzahl(),
-                item.getLebensmittel().getName()
+                item.getAnzahl(),
+                item.getLebensmittel()
         );
 
         kühlschrank.itemHinzufuegen(item);

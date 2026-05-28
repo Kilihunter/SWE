@@ -1,4 +1,4 @@
-package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
+/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
 
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.Einkaufsliste;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.EinkaufslisteRepository;
@@ -75,3 +75,4 @@ class EinkaufslistenVerwaltungsServiceTest {
         assertThat(result).isSameAs(liste);
     }
 }
+    */

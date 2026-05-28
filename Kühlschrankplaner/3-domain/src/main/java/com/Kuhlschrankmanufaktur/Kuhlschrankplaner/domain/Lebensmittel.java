@@ -1,33 +1,65 @@
 package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 
-import java.util.Objects;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 
-@Embeddable
+@Entity
 public final class Lebensmittel {
-
+    @Id
     private final String name;
 
     @Enumerated(EnumType.STRING)
-    private final Kategorie kategorie;
+    private Kategorie kategorie;
+
+    @Enumerated(EnumType.STRING)
+    private Einheit einheit;
+
+    private Integer minMenge;
 
     protected Lebensmittel() {
         this.name = null;
         this.kategorie = null;
+        this.einheit = null;
+        this.minMenge = null;
     }
 
-    public Lebensmittel(String name, Kategorie kategorie) {
+    public Lebensmittel(String name, Kategorie kategorie, Einheit einheit, Integer minMenge) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Der Name des Lebensmittels darf nicht leer sein.");
         }
         if (kategorie == null) {
             throw new IllegalArgumentException("Kategorie darf nicht null sein.");
         }
+        if (einheit == null) {
+            throw new IllegalArgumentException("Einheit darf nicht null sein.");
+        }
+        if (minMenge == null || minMenge < 0) {
+            throw new IllegalArgumentException("Minimale Menge darf kleiner 0 sein.");
+        }
 
         this.name = name;
         this.kategorie = kategorie;
+        this.einheit = einheit;
+        this.minMenge = minMenge == 0 ? null : minMenge; 
+    }
+
+    public Lebensmittel lebensmittelAnpassen(Kategorie neueKategorie, Einheit neueEinheit, Integer neueMinMenge) {
+        if (neueKategorie == null) {
+            throw new IllegalArgumentException("Kategorie darf nicht null sein.");
+        }
+        if (neueEinheit != einheit) {
+            throw new IllegalArgumentException("Einheit darf sich nicht ändern würde sich auf die vorhandenen Items auswirken.");
+        }
+        if (neueMinMenge == null || neueMinMenge < 0) {
+            throw new IllegalArgumentException("Minimale Menge darf nicht kleiner 0 sein.");
+        }
+
+        this.kategorie = neueKategorie;
+        this.einheit = neueEinheit;
+        this.minMenge = neueMinMenge == 0 ? null : neueMinMenge; 
+        return this;
     }
 
     public String getName() {
@@ -38,23 +70,11 @@ public final class Lebensmittel {
         return kategorie;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Lebensmittel that = (Lebensmittel) o;
-        return Objects.equals(name, that.name) &&
-               kategorie == that.kategorie;
+    public Einheit getEinheit() {
+        return einheit;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, kategorie);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s (%s)", name, kategorie);
+    public Integer getMinMenge() {
+        return minMenge;
     }
 }

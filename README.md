@@ -1,11 +1,5 @@
 # Kühlschrankplaner
 
-Der Kühlschrankplaner ist eine Spring-Boot-Anwendung zur Verwaltung von Kühlschränken.
-
-Ein `Lebensmittel` beschreibt dabei die Art des Lebensmittels, zum Beispiel `Steak`, `Gurke` oder `Milch`. Ein `Item` ist dagegen ein konkreter Bestandseintrag im Kühlschrank, zum Beispiel `2 kg Fleisch`, `3 Gurken` oder `1 Packung Milch`.
-
-Items können mit Name, Kategorie, Anzahl, Einheit und Haltbarkeitsdatum gespeichert und verwaltet werden. Zusätzlich gibt es Suchfunktionen und Einkaufslisten.
-
 ## Funktionalitäten
 
 Die Anwendung unterstützt folgende Funktionen:

@@ -5,20 +5,27 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EinkaufslistenVerwaltungsService {
 
     private final EinkaufslisteRepository einkaufslisteRepository;
-    private final KühlschrankRepository kühlschrankRepository;
+    private final KühlschrankVerwaltungsService kühlschrankVerwaltungsService;
     private final ItemFactory itemFactory;
+    private final LebensmittelVerwaltungsService lebensmittelVerwaltungsService;
+    private final KühlschrankDomainService kühlschrankDomainService;
 
     public EinkaufslistenVerwaltungsService(EinkaufslisteRepository einkaufslisteRepository,
-                                             KühlschrankRepository kühlschrankRepository,
-                                             ItemFactory itemFactory) {
+                                             KühlschrankVerwaltungsService kühlschrankVerwaltungsService,
+                                             ItemFactory itemFactory,
+                                             LebensmittelVerwaltungsService lebensmittelVerwaltungsService, KühlschrankDomainService kühlschrankDomainService) {
         this.einkaufslisteRepository = einkaufslisteRepository;
-        this.kühlschrankRepository = kühlschrankRepository;
+        this.kühlschrankVerwaltungsService = kühlschrankVerwaltungsService;
         this.itemFactory = itemFactory;
+        this.lebensmittelVerwaltungsService = lebensmittelVerwaltungsService;
+        this.kühlschrankDomainService = kühlschrankDomainService;
+
     }
 
     public Einkaufsliste einkaufslisteAnlegen(String name) {
@@ -37,8 +44,8 @@ public class EinkaufslistenVerwaltungsService {
 
     public Einkaufsliste schreibeAuf(Integer einkaufslisteId, int anzahl, String lebensmittelName) {
         Einkaufsliste liste = getEinkaufsliste(einkaufslisteId);
-
-        liste.schreibeAuf(anzahl, lebensmittelName);
+        Lebensmittel lebensmittel = lebensmittelVerwaltungsService.lebensmittelAbfrage(lebensmittelName);
+        liste.schreibeAuf(anzahl, lebensmittel);
 
     return einkaufslisteRepository.save(liste);
     }
@@ -47,22 +54,18 @@ public class EinkaufslistenVerwaltungsService {
             Integer kühlschrankId,
             int anzahl,
             String lebensmittelName,
-            LocalDate haltbarkeit,
-            String kategorie,
-            String einheit) {
+            LocalDate haltbarkeit
+        ) {
 
-        Kühlschrank kühlschrank = ladeKühlschrank(kühlschrankId);
+        Kühlschrank kühlschrank = kühlschrankVerwaltungsService.getKühlschrank(kühlschrankId);
         Einkaufsliste einkaufsliste = getEinkaufsliste(einkaufslisteId);
-
+        Lebensmittel lebensmittel = lebensmittelVerwaltungsService.lebensmittelAbfrage(lebensmittelName);
         Item item = itemFactory.erstelleItem(
-                lebensmittelName,
-                einheit,
-                kategorie,
-                haltbarkeit,
-                anzahl
+                lebensmittel,
+                 haltbarkeit,
+                 anzahl
         );
 
-        KühlschrankDomainService kühlschrankDomainService = new KühlschrankDomainService();
 
         kühlschrankDomainService.einkaufVerarbeiten(
                 einkaufsliste,
@@ -70,25 +73,50 @@ public class EinkaufslistenVerwaltungsService {
                 item
         );
 
-        kühlschrankRepository.save(kühlschrank);
+        kühlschrankVerwaltungsService.kühlschrankSpeichern(kühlschrank);
 
         return einkaufslisteRepository.save(einkaufsliste);
     }
 
-    public Einkaufsliste sachenDieNachgekauftWerdenMüssen(Integer kühlschrankId, Integer einkaufslisteId) {
-        Kühlschrank kühlschrank = kühlschrankRepository.findById(kühlschrankId)
-                .orElseThrow(() -> new IllegalArgumentException("Kühlschrank mit ID " + kühlschrankId + " nicht gefunden."));
+    public Einkaufsliste sachenDieNachgekauftWerdenMüssen( Integer einkaufslisteId) {
+        List<Kühlschrank> kühlschränke = kühlschrankVerwaltungsService.getAlleKühlschränke();
+        if (kühlschränke.isEmpty()) {
+            throw new IllegalArgumentException("Es muss mindestens einen Kühlschrank geben, um die Einkaufsliste zu aktualisieren.");
+        }
         Einkaufsliste einkaufsliste = einkaufslisteRepository.findById(einkaufslisteId)
                 .orElseThrow(() -> new IllegalArgumentException("Einkaufsliste mit ID " + einkaufslisteId + " nicht gefunden."));
-        KühlschrankDomainService kühlschrankDomainService = new KühlschrankDomainService();
-        kühlschrankDomainService.abgelaufeneEntsorgenUndNachkaufen(kühlschrank, einkaufsliste);
-        kühlschrankRepository.save(kühlschrank);
+        kühlschrankDomainService.abgelaufeneEntsorgenUndNachkaufen(kühlschränke, einkaufsliste);
+        
+        for (Kühlschrank kühlschrank : kühlschränke) {
+            kühlschrankVerwaltungsService.kühlschrankSpeichern(kühlschrank);
+        }
         return einkaufslisteRepository.save(einkaufsliste);
     }
-    private Kühlschrank ladeKühlschrank(Integer kühlschrankId) {
-        return kühlschrankRepository.findById(kühlschrankId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Kühlschrank mit ID " + kühlschrankId + " nicht gefunden."
-                ));
-    }
+
+    public Einkaufsliste LebensmittelNachkaufenUmMindestBestandZuErreichen(Integer einkaufslisteId) {
+        List<Kühlschrank> kühlschränke = kühlschrankVerwaltungsService.getAlleKühlschränke();
+        if (kühlschränke.isEmpty()) {
+            throw new IllegalArgumentException("Es muss mindestens einen Kühlschrank geben, um die Einkaufsliste zu aktualisieren.");
+        }
+        Einkaufsliste einkaufsliste = einkaufslisteRepository.findById(einkaufslisteId)
+                .orElseThrow(() -> new IllegalArgumentException("Einkaufsliste mit ID " + einkaufslisteId + " nicht gefunden."));
+        Map<Lebensmittel, Integer> lebensmittelMitMindestbestand = lebensmittelVerwaltungsService.getAlleLebensmittelMitMindestbestand();
+        for (Map.Entry<Lebensmittel, Integer> eintrag : lebensmittelMitMindestbestand.entrySet()) {
+            Lebensmittel lebensmittel = eintrag.getKey();
+            Integer minMenge = eintrag.getValue();
+
+            int gesamtBestand = kühlschränke.stream()
+                    .mapToInt(kühlschrank -> kühlschrank.bestandVon(lebensmittel))
+                    .sum();
+
+            if (gesamtBestand < minMenge) {
+                int fehlendeMenge = minMenge - gesamtBestand;
+                einkaufsliste.schreibeAuf(fehlendeMenge, lebensmittel);
+            }
+        }
+        for (Kühlschrank kühlschrank : kühlschränke) {
+            kühlschrankVerwaltungsService.kühlschrankSpeichern(kühlschrank);
+        }
+        return einkaufslisteRepository.save(einkaufsliste);
+}
 }

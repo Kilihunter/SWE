@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/einkaufsliste")
+@RequestMapping("/einkaufsliste")
 public class EinkaufslistenController {
 
     private final EinkaufslistenVerwaltungsService service;
@@ -51,34 +51,31 @@ public class EinkaufslistenController {
             mapper.map(service.getEinkaufsliste(einkaufslisteId)) 
     );
     }
-     @PostMapping("/{einkaufslisteId}/nachkaufen-aus-kuehlschrank/{kId}")
+     @PostMapping("/{einkaufslisteId}/nachkaufen")
     public ResponseEntity<EinkaufslisteResource> sachenDieNachgekauftWerdenMuessen(
-            @PathVariable Integer einkaufslisteId,
-            @PathVariable Integer kId) {
+            @PathVariable Integer einkaufslisteId
+           ) {
 
        Einkaufsliste einkaufsliste =  service.sachenDieNachgekauftWerdenMüssen(
-                kId,
                 einkaufslisteId
         );
 
         return ResponseEntity.ok(mapper.map(einkaufsliste));
     }
 
-    @PostMapping("/{einkaufslisteId}/verarbeiten/kühlschrank/{kId}")
+    @PostMapping("/{einkaufslisteId}/verarbeiten/kühlschrank/{kuehlschrankId}")
     public ResponseEntity<EinkaufslisteResource> einkaufVerarbeiten(
             @PathVariable Integer einkaufslisteId,
-            @PathVariable Integer kId,
+            @PathVariable Integer kuehlschrankId,
             @RequestBody List<ItemErstellenResource> items) {
         Einkaufsliste einkaufsliste = service.getEinkaufsliste(einkaufslisteId);
         for (ItemErstellenResource item : items) {
             einkaufsliste = service.einkaufVerarbeiten(
                     einkaufslisteId,
-                    kId,
-                    item.getMenge(),
-                    item.getName(),
-                    item.getHaltbarkeit(),
-                    item.getKategorie(),
-                    item.getEinheit()
+                    kuehlschrankId,
+                    item.getAnzahl(),
+                    item.getLebensmittelName(),
+                    item.getHaltbarkeit()
             );
         }
         return ResponseEntity.ok(

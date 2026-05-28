@@ -26,7 +26,7 @@ public class Einkaufsliste {
     @CollectionTable(name = "einkaufsliste_eintraege", joinColumns = @JoinColumn(name = "einkaufsliste_id"))
     @MapKeyColumn(name = "lebensmittel_name")
     @Column(name = "anzahl")
-    private Map<String, Integer> eintraege = new HashMap<>();
+    private Map<Lebensmittel, Integer> eintraege = new HashMap<>();
 
     protected Einkaufsliste() {
     }
@@ -41,37 +41,37 @@ public class Einkaufsliste {
     public Integer getId() { return id; }
     public String getName() { return name; }
 
-    public void schreibeAuf(int anzahl, String lebensmittelName) {
-        if (lebensmittelName == null || lebensmittelName.isBlank()) {
-             throw new IllegalArgumentException("Lebensmittelname darf nicht leer sein.");
+    public void schreibeAuf(int anzahl, Lebensmittel lebensmittel) {
+        if (lebensmittel == null) {
+             throw new IllegalArgumentException("Lebensmittel darf nicht null sein.");
         }
         if (anzahl <= 0) {
              throw new IllegalArgumentException("Anzahl muss größer als 0 sein.");
         }
-        eintraege.put(lebensmittelName.trim(), eintraege.getOrDefault(lebensmittelName.trim(), 0) + anzahl);
+        eintraege.put(lebensmittel, eintraege.getOrDefault(lebensmittel, 0) + anzahl);
     }
 
-    public void eingekauft(int anzahl, String lebensmittelName) {
-        if (lebensmittelName == null || lebensmittelName.isBlank() || anzahl <= 0) {
-            throw new IllegalArgumentException("Ungültige Eingabe für eingekauft: " + anzahl + " " + lebensmittelName);
+    public void eingekauft(int anzahl, Lebensmittel lebensmittel) {
+        if (lebensmittel == null || anzahl <= 0) {
+            throw new IllegalArgumentException("Ungültige Eingabe für eingekauft: " + anzahl + " " + lebensmittel);
+
         }
 
-        String normalisierterName = lebensmittelName.trim();
-
-        if (!eintraege.containsKey(normalisierterName)) {
-            throw new IllegalArgumentException("Lebensmittel '" + normalisierterName + "' steht nicht auf der Einkaufsliste.");
+        if (!eintraege.containsKey(lebensmittel)) {
+            throw new IllegalArgumentException("Lebensmittel '" + lebensmittel.getName() + "' steht nicht auf der Einkaufsliste.");
         }
-        int aktuelleAnzahl = eintraege.get(normalisierterName);
+
+        int aktuelleAnzahl = eintraege.get(lebensmittel);
         int neueAnzahl = aktuelleAnzahl - anzahl;
 
         if (neueAnzahl <= 0) {
-            eintraege.remove(normalisierterName);
+            eintraege.remove(lebensmittel);
         } else {
-            eintraege.put(normalisierterName, neueAnzahl);
+            eintraege.put(lebensmittel, neueAnzahl);
         }
     }
 
-    public Map<String, Integer> getEintraege() {
+    public Map<Lebensmittel, Integer> getEintraege() {
         return Collections.unmodifiableMap(eintraege);
     }
 }
