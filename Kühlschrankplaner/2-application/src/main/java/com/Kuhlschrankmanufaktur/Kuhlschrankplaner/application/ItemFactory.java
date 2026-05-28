@@ -24,8 +24,7 @@ public class ItemFactory {
 
         Lebensmittel lebensmittel = new Lebensmittel(
                 lebensmittelName,
-                kategorieDomain,
-                einheitDomain
+                kategorieDomain
         );
 
         Haltbarkeitsdatum haltbarkeitsdatum = new Haltbarkeitsdatum(haltbarkeit);

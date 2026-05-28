@@ -18,20 +18,10 @@ public class SearchVerwaltungsService {
         this.repository = repository;
     }
 
-    private List<Kühlschrank> getZielKuehlschraenke(Integer kuehlschrankId) {
-        if (kuehlschrankId != null) {
-            Kühlschrank k = repository.findById(kuehlschrankId)
-                    .orElseThrow(() -> new IllegalArgumentException("Kühlschrank nicht gefunden."));
-            return List.of(k); 
-        } else {
-            return repository.findAll();
-        }
-    }
-
-    public List<Item> findeAblaufendeItems(Integer kuehlschrankId, int tageBisAblauf) {
+    public List<Item> findeAblaufendeUndAbgelaufeneItems(Integer kuehlschrankId, int tageBisAblauf) {
         LocalDate grenzDatum = LocalDate.now().plusDays(tageBisAblauf);
 
-        return getZielKuehlschraenke(kuehlschrankId).stream()
+        return ladeZielKuehlschraenke(kuehlschrankId).stream()
                 .flatMap(kuehlschrank -> kuehlschrank.getItems().stream())
                 .filter(item -> !item.getHaltbarkeit().getDatum().isAfter(grenzDatum))
                 .sorted(Comparator.comparing(item -> item.getHaltbarkeit().getDatum()))

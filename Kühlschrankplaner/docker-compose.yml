@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: kuehlschrank-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootPasswort
+      MYSQL_DATABASE: kuehlschrank
+      MYSQL_USER: app
+      MYSQL_PASSWORD: appPasswort
+    volumes:
+      - kuehlschrank-data:/var/lib/mysql
+
+volumes:
+  kuehlschrank-data:

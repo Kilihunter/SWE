@@ -34,18 +34,19 @@ class SearchVerwaltungsServiceTest {
         Item morgen = itemMitHaltbarkeit(LocalDate.now().plusDays(1));
         Item inDreiTagen = itemMitHaltbarkeit(LocalDate.now().plusDays(3));
         Item spaeter = itemMitHaltbarkeit(LocalDate.now().plusDays(10));
+        Item abgelaufen = itemMitHaltbarkeit(LocalDate.now().minusDays(1));
 
         Kühlschrank kühlschrank = mock(Kühlschrank.class);
 
         when(kühlschrank.getItems())
-                .thenReturn(List.of(spaeter, inDreiTagen, morgen));
+                .thenReturn(List.of(spaeter, inDreiTagen, morgen, abgelaufen));
 
         when(repository.findById(1))
                 .thenReturn(Optional.of(kühlschrank));
 
-        List<Item> result = service.findeAblaufendeItems(1, 3);
+        List<Item> result = service.findeAblaufendeUndAbgelaufeneItems(1, 3);
 
-        assertThat(result).containsExactly(morgen, inDreiTagen);
+        assertThat(result).containsExactly(abgelaufen,morgen, inDreiTagen);
     }
 
     @Test

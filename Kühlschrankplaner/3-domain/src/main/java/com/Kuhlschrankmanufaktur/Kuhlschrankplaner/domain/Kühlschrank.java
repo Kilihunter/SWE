@@ -54,7 +54,10 @@ public class Kühlschrank {
                 .filter(item -> item.getId() != null && item.getId().equals(itemId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Item mit ID " + itemId + " nicht gefunden."));
-
+        
+        if (verbrauchteAnzahl <= 0) {
+            throw new IllegalArgumentException("Verbrauchte Anzahl muss positiv sein.");
+        }
         int neueAnzahl = gefundenesItem.getMenge().getAnzahl() - verbrauchteAnzahl;
 
         if (neueAnzahl > 0) {

@@ -30,20 +30,22 @@ Die Anwendung unterstützt folgende Funktionen:
   
 ## Datenbank
 
-Die Anwendung verwendet MySQL.
+DB starten (im Kühlschrankplaner-Verzeichnis)
+docker compose up -d
 
-Damit die Anwendung gestartet werden kann, muss eine MySQL-Instanz auf Port `3306` laufen. Alternativ kann die Datenbankanbindung in folgender Datei an die lokale Datenbank angepasst werden:
-```text
-0-plugins/src/main/resources/application.properties
-```
+DB stoppen
+docker compose down
 
-Außerdem muss eine Datenbank mit dem Namen `kuehlschrank` existieren.
+DB stoppen UND Daten löschen
+docker compose down -v
 
 ## Anwendung starten
+
 Zuerst im Root-Ordner Kühlschrankplaner das Projekt bauen:
 ```bash
 mvn clean install
 ```
+
 Danach in das Plugin-Modul wechseln:
 
 ```bash

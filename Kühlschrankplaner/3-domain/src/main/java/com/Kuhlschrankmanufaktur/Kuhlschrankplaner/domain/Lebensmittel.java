@@ -18,7 +18,7 @@ public final class Lebensmittel {
         this.kategorie = null;
     }
 
-    public Lebensmittel(String name, Kategorie kategorie, Einheit einheit) {
+    public Lebensmittel(String name, Kategorie kategorie) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Der Name des Lebensmittels darf nicht leer sein.");
         }

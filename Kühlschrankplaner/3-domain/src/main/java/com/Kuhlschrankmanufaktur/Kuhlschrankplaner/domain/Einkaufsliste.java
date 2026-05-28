@@ -48,25 +48,26 @@ public class Einkaufsliste {
         if (anzahl <= 0) {
              throw new IllegalArgumentException("Anzahl muss größer als 0 sein.");
         }
-        eintraege.put(lebensmittelName, eintraege.getOrDefault(lebensmittelName, 0) + anzahl);
+        eintraege.put(lebensmittelName.trim(), eintraege.getOrDefault(lebensmittelName.trim(), 0) + anzahl);
     }
 
     public void eingekauft(int anzahl, String lebensmittelName) {
         if (lebensmittelName == null || lebensmittelName.isBlank() || anzahl <= 0) {
-            return;
+            throw new IllegalArgumentException("Ungültige Eingabe für eingekauft: " + anzahl + " " + lebensmittelName);
         }
 
         String normalisierterName = lebensmittelName.trim();
 
-        if (eintraege.containsKey(normalisierterName)) {
-            int aktuelleAnzahl = eintraege.get(normalisierterName);
-            int neueAnzahl = aktuelleAnzahl - anzahl;
+        if (!eintraege.containsKey(normalisierterName)) {
+            throw new IllegalArgumentException("Lebensmittel '" + normalisierterName + "' steht nicht auf der Einkaufsliste.");
+        }
+        int aktuelleAnzahl = eintraege.get(normalisierterName);
+        int neueAnzahl = aktuelleAnzahl - anzahl;
 
-            if (neueAnzahl <= 0) {
-                eintraege.remove(normalisierterName);
-            } else {
-                eintraege.put(normalisierterName, neueAnzahl);
-            }
+        if (neueAnzahl <= 0) {
+            eintraege.remove(normalisierterName);
+        } else {
+            eintraege.put(normalisierterName, neueAnzahl);
         }
     }
 

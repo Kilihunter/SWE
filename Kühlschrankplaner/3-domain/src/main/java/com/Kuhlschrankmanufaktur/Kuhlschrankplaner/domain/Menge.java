@@ -19,8 +19,8 @@ public final class Menge {
     }
 
     public Menge(int anzahl, Einheit einheit) {
-        if (anzahl < 0) {
-            throw new IllegalArgumentException("Die Anzahl darf nicht negativ sein.");
+        if (anzahl <= 0) {
+            throw new IllegalArgumentException("Die Anzahl darf nicht null oder negativ sein.");
         }
         if (einheit == null) {
             throw new IllegalArgumentException("Einheit darf nicht null sein.");
