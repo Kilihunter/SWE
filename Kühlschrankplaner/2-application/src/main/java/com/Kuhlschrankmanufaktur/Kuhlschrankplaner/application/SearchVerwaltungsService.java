@@ -18,7 +18,7 @@ public class SearchVerwaltungsService {
         this.repository = repository;
     }
 
-    public List<Item> findeAbgelaufendeItems(Integer kuehlschrankId, int tageBisAblauf) {
+    public List<Item> findeAbgelaufeneItems(Integer kuehlschrankId, int tageBisAblauf) {
         LocalDate grenzDatum = LocalDate.now().plusDays(tageBisAblauf);
 
         return ladeZielKuehlschraenke(kuehlschrankId).stream()

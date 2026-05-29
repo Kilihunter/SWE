@@ -51,7 +51,7 @@ public class EinkaufslistenController {
             mapper.map(service.getEinkaufsliste(einkaufslisteId)) 
     );
     }
-     @PostMapping("/{einkaufslisteId}/nachkaufen")
+     @PostMapping("/{einkaufslisteId}/abgelaufeneproduktenachkaufen")
     public ResponseEntity<EinkaufslisteResource> sachenDieNachgekauftWerdenMuessen(
             @PathVariable Integer einkaufslisteId
            ) {
@@ -63,7 +63,7 @@ public class EinkaufslistenController {
         return ResponseEntity.ok(mapper.map(einkaufsliste));
     }
 
-    @PostMapping("/{einkaufslisteId}/mindestbestand")
+    @PostMapping("/{einkaufslisteId}/lebensmittelaufmindestbestandpruefen")
     public ResponseEntity<EinkaufslisteResource> mindestbestandNachkaufen(
             @PathVariable Integer einkaufslisteId) {
         Einkaufsliste einkaufsliste = service.lebensmittelAufschreibenDieMindAnzahlNichtErreichen(einkaufslisteId);

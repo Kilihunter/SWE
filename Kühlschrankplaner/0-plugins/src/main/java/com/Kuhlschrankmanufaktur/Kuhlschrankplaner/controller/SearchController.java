@@ -28,7 +28,7 @@ public class SearchController {
             @RequestParam(required = false) Integer kuehlschrankId, 
             @RequestParam(defaultValue = "3") int tageBisAblauf    
     ) {
-        var items = queryService.findeAbgelaufendeItems(kuehlschrankId, tageBisAblauf);
+        var items = queryService.findeAbgelaufeneItems(kuehlschrankId, tageBisAblauf);
         var response = items.stream().map(itemMapper::map).collect(Collectors.toList());
         
         return ResponseEntity.ok(response);
