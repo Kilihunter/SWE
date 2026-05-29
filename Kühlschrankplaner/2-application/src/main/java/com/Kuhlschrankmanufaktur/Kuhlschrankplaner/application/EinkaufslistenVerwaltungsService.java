@@ -78,7 +78,7 @@ public class EinkaufslistenVerwaltungsService {
         return einkaufslisteRepository.save(einkaufsliste);
     }
 
-    public Einkaufsliste sachenDieNachgekauftWerdenMüssen( Integer einkaufslisteId) {
+    public Einkaufsliste itemsDieAbgelaufenSindAufschreiben( Integer einkaufslisteId) {
         List<Kühlschrank> kühlschränke = kühlschrankVerwaltungsService.getAlleKühlschränke();
         if (kühlschränke.isEmpty()) {
             throw new IllegalArgumentException("Es muss mindestens einen Kühlschrank geben, um die Einkaufsliste zu aktualisieren.");
@@ -93,7 +93,7 @@ public class EinkaufslistenVerwaltungsService {
         return einkaufslisteRepository.save(einkaufsliste);
     }
 
-    public Einkaufsliste LebensmittelNachkaufenUmMindestBestandZuErreichen(Integer einkaufslisteId) {
+    public Einkaufsliste lebensmittelAufschreibenDieMindAnzahlNichtErreichen(Integer einkaufslisteId) {
         List<Kühlschrank> kühlschränke = kühlschrankVerwaltungsService.getAlleKühlschränke();
         if (kühlschränke.isEmpty()) {
             throw new IllegalArgumentException("Es muss mindestens einen Kühlschrank geben, wo sollen sonst die lebensmittel gelagert werden?");

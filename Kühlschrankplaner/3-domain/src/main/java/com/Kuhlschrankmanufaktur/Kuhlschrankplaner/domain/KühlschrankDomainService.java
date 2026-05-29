@@ -12,7 +12,9 @@ public class KühlschrankDomainService {
             List<Item> abgelaufene = kühlschrank.getAbgelaufeneItems();
 
             for (Item item : abgelaufene) {
-                einkaufsliste.schreibeAuf(item.getAnzahl(), item.getLebensmittel());
+                if (!einkaufsliste.getEintraege().containsKey(item.getLebensmittel())) {
+                    einkaufsliste.schreibeAuf(item.getAnzahl(), item.getLebensmittel());
+                }
                 kühlschrank.itemVerbrauchen(item, item.getAnzahl());
             }
         }
