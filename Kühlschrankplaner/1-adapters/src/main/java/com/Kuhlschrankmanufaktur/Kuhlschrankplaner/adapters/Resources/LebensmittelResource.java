@@ -6,7 +6,8 @@ public class LebensmittelResource {
     public String kategorie;
     public String einheit;
     public int minMenge;
-    LebensmittelResource(String name, String kategorie, String einheit, int minMenge) {
+
+    public LebensmittelResource(String name, String kategorie, String einheit, int minMenge) {
         this.name = name;
         this.kategorie = kategorie;
         this.einheit = einheit;

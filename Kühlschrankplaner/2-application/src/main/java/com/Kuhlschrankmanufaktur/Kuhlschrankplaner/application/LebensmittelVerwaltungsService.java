@@ -18,6 +18,9 @@ public class LebensmittelVerwaltungsService {
     }
 
     public Lebensmittel lebensmittelAnlegen(String name, String kategorie, String einheit, int minMenge) {
+        if (lebensmittelRepository.findByLebensmittelName(name).isPresent()) {
+            throw new IllegalArgumentException("Lebensmittel '" + name + "' existiert bereits.");
+        }
         Kategorie kategorieDomain = Kategorie.valueOf(kategorie.toUpperCase());
         Einheit einheitDomain = Einheit.valueOf(einheit.toUpperCase());
 
@@ -48,7 +51,7 @@ public class LebensmittelVerwaltungsService {
         Map<Lebensmittel, Integer> lebensmittelMitMindestbestand = new HashMap<>();
 
         for (Lebensmittel lebensmittel : lebensmittelListe) {
-            if (lebensmittel.getMinMenge() != null) {
+            if (lebensmittel.getMinMenge() != 0) {
                 lebensmittelMitMindestbestand.put(lebensmittel, lebensmittel.getMinMenge());
             }
         }

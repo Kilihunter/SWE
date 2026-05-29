@@ -3,20 +3,16 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "kuehlschrank")
 public class Kühlschrank {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
@@ -80,17 +76,8 @@ public class Kühlschrank {
                 .toList();
     }
 
-    public List<Item> getBestandUebersicht() {
-        return items;
-    }
-    public void itemKorrigieren(Item item, Item korrigiertesItem) {
-
-        item.korrigieren(
-                korrigiertesItem.getLebensmittel(),
-                korrigiertesItem.getHaltbarkeit(),
-                korrigiertesItem.getAnzahl(),
-                korrigiertesItem.getLebensmittel().getEinheit()
-        );
+    public void itemKorrigieren(Item item, Lebensmittel lebensmittel, Haltbarkeitsdatum haltbarkeit, int anzahl) {
+        item.korrigieren(lebensmittel, haltbarkeit, anzahl, lebensmittel.getEinheit());
     }   
     public Item findeItemNachId(Integer itemId) {
         return items.stream()
@@ -99,5 +86,17 @@ public class Kühlschrank {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Item mit ID " + itemId + " nicht gefunden."
                 ));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Kühlschrank k)) return false;
+        return id != null && id.equals(k.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

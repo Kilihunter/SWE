@@ -3,28 +3,22 @@ package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.*;
 
 @Entity
 public class Einkaufsliste {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
 
     @ElementCollection
     @CollectionTable(name = "einkaufsliste_eintraege", joinColumns = @JoinColumn(name = "einkaufsliste_id"))
-    @MapKeyColumn(name = "lebensmittel_name")
+    @MapKeyJoinColumn(name = "lebensmittel_name")
     @Column(name = "anzahl")
     private Map<Lebensmittel, Integer> eintraege = new HashMap<>();
 
@@ -48,7 +42,7 @@ public class Einkaufsliste {
         if (anzahl <= 0) {
              throw new IllegalArgumentException("Anzahl muss größer als 0 sein.");
         }
-        eintraege.put(lebensmittel, eintraege.getOrDefault(lebensmittel, 0) + anzahl);
+        eintraege.put(lebensmittel, anzahl);
     }
 
     public void eingekauft(int anzahl, Lebensmittel lebensmittel) {
@@ -74,4 +68,17 @@ public class Einkaufsliste {
     public Map<Lebensmittel, Integer> getEintraege() {
         return Collections.unmodifiableMap(eintraege);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Einkaufsliste e)) return false;
+        return id != null && id.equals(e.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
+

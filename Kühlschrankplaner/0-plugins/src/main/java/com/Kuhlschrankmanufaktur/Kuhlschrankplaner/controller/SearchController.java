@@ -23,12 +23,12 @@ public class SearchController {
     }
 
     
-    @GetMapping("/ablaufendUndAbgelaufen")
-    public ResponseEntity<List<ItemResource>> getAblaufendeUndAbgelaufeneItems(
+    @GetMapping("/ablaufende")
+    public ResponseEntity<List<ItemResource>> getAblaufendeItems(
             @RequestParam(required = false) Integer kuehlschrankId, 
             @RequestParam(defaultValue = "3") int tageBisAblauf    
     ) {
-        var items = queryService.findeAblaufendeUndAbgelaufeneItems(kuehlschrankId, tageBisAblauf);
+        var items = queryService.findeAbgelaufendeItems(kuehlschrankId, tageBisAblauf);
         var response = items.stream().map(itemMapper::map).collect(Collectors.toList());
         
         return ResponseEntity.ok(response);

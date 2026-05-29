@@ -8,6 +8,12 @@ public class ItemErstellenResource {
     public Integer anzahl;
     public LocalDate haltbarkeit;
 
+    public ItemErstellenResource(String lebensmittelName, Integer anzahl, LocalDate haltbarkeit) {
+        this.lebensmittelName = lebensmittelName;
+        this.anzahl = anzahl;
+        this.haltbarkeit = haltbarkeit;
+    }
+
     public String getLebensmittelName() {
         return lebensmittelName;
     }

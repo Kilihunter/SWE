@@ -63,7 +63,14 @@ public class EinkaufslistenController {
         return ResponseEntity.ok(mapper.map(einkaufsliste));
     }
 
-    @PostMapping("/{einkaufslisteId}/verarbeiten/kühlschrank/{kuehlschrankId}")
+    @PostMapping("/{einkaufslisteId}/mindestbestand")
+    public ResponseEntity<EinkaufslisteResource> mindestbestandNachkaufen(
+            @PathVariable Integer einkaufslisteId) {
+        Einkaufsliste einkaufsliste = service.LebensmittelNachkaufenUmMindestBestandZuErreichen(einkaufslisteId);
+        return ResponseEntity.ok(mapper.map(einkaufsliste));
+    }
+
+    @PostMapping("/{einkaufslisteId}/eingekauft/kuehlschrank/{kuehlschrankId}")
     public ResponseEntity<EinkaufslisteResource> einkaufVerarbeiten(
             @PathVariable Integer einkaufslisteId,
             @PathVariable Integer kuehlschrankId,

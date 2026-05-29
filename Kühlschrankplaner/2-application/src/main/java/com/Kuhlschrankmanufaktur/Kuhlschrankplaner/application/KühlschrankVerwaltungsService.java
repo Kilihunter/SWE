@@ -65,8 +65,8 @@ public class KühlschrankVerwaltungsService {
         Kühlschrank kühlschrank = getKühlschrank(kühlschrankId);
         Item item = kühlschrank.findeItemNachId(itemId);
         Lebensmittel lebensmittel = lebensmittelVerwaltungsService.lebensmittelAbfrage(lebensmittelName);
-        Item korrigiertesItem = itemFactory.erstelleItem(lebensmittel, haltbarkeit, anzahl);
-        kühlschrank.itemKorrigieren(item, korrigiertesItem);
+        Haltbarkeitsdatum haltbarkeitsdatum = new Haltbarkeitsdatum(haltbarkeit);
+        kühlschrank.itemKorrigieren(item, lebensmittel, haltbarkeitsdatum, anzahl);
         return kühlschrankRepository.save(kühlschrank);
     }
 

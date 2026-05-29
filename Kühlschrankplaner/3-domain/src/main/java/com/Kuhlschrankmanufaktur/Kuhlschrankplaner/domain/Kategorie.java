@@ -6,5 +6,6 @@ public enum Kategorie {
     FLEISCH,
     MILCHPRODUKTE,
     GETRAENKE,
-    SNACKS
+    SNACKS,
+    EIER,
 }

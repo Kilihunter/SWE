@@ -44,9 +44,9 @@ class SearchVerwaltungsServiceTest {
         when(repository.findById(1))
                 .thenReturn(Optional.of(kühlschrank));
 
-        List<Item> result = service.findeAblaufendeUndAbgelaufeneItems(1, 3);
+        List<Item> result = service.findeAbgelaufendeItems(1, 3);
 
-        assertThat(result).containsExactly(abgelaufen, morgen, inDreiTagen);
+        assertThat(result).containsExactly(morgen, inDreiTagen);
     }
 
     @Test

@@ -1,8 +1,9 @@
-/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
+package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
 
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.Einkaufsliste;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.EinkaufslisteRepository;
-import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.KühlschrankRepository;
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.KühlschrankDomainService;
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.Lebensmittel;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,11 +27,16 @@ class EinkaufslistenVerwaltungsServiceTest {
     private EinkaufslisteRepository einkaufslisteRepository;
 
     @Mock
-    private KühlschrankRepository kühlschrankRepository;
-
+    private KühlschrankVerwaltungsService kühlschrankVerwaltungsService;
 
     @Mock
     private ItemFactory itemFactory;
+
+    @Mock
+    private LebensmittelVerwaltungsService lebensmittelVerwaltungsService;
+
+    @Mock
+    private KühlschrankDomainService kühlschrankDomainService;
 
     @InjectMocks
     private EinkaufslistenVerwaltungsService service;
@@ -60,19 +66,22 @@ class EinkaufslistenVerwaltungsServiceTest {
     @Test
     void schreibeAuf_schreibtEintragAufListeUndSpeichert() {
         Einkaufsliste liste = mock(Einkaufsliste.class);
+        Lebensmittel lebensmittel = mock(Lebensmittel.class);
 
         when(einkaufslisteRepository.findById(1))
                 .thenReturn(Optional.of(liste));
+
+        when(lebensmittelVerwaltungsService.lebensmittelAbfrage("Karotten"))
+                .thenReturn(lebensmittel);
 
         when(einkaufslisteRepository.save(liste))
                 .thenReturn(liste);
 
         Einkaufsliste result = service.schreibeAuf(1, 3, "Karotten");
 
-        verify(liste).schreibeAuf(3, "Karotten");
+        verify(liste).schreibeAuf(3, lebensmittel);
         verify(einkaufslisteRepository).save(liste);
 
         assertThat(result).isSameAs(liste);
     }
 }
-    */

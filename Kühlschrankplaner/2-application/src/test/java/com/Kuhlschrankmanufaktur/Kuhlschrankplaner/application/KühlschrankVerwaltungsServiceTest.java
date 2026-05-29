@@ -1,5 +1,6 @@
-/*package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
+package com.Kuhlschrankmanufaktur.Kuhlschrankplaner.application;
 
+import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.Item;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.Kühlschrank;
 import com.Kuhlschrankmanufaktur.Kuhlschrankplaner.domain.KühlschrankRepository;
 
@@ -28,6 +29,9 @@ class KühlschrankVerwaltungsServiceTest {
 
     @Mock
     private ItemFactory itemFactory;
+
+    @Mock
+    private LebensmittelVerwaltungsService lebensmittelVerwaltungsService;
 
     @InjectMocks
     private KühlschrankVerwaltungsService service;
@@ -69,16 +73,20 @@ class KühlschrankVerwaltungsServiceTest {
     @Test
     void itemEntfernen_entferntItemUndSpeichertKühlschrank() {
         Kühlschrank kühlschrank = mock(Kühlschrank.class);
+        Item item = mock(Item.class);
 
         when(kühlschrankRepository.findById(1))
                 .thenReturn(Optional.of(kühlschrank));
+
+        when(kühlschrank.findeItemNachId(42))
+                .thenReturn(item);
 
         when(kühlschrankRepository.save(kühlschrank))
                 .thenReturn(kühlschrank);
 
         Kühlschrank result = service.itemEntfernen(1, 42);
 
-        verify(kühlschrank).itemEntfernen(42);
+        verify(kühlschrank).itemEntfernen(item);
         verify(kühlschrankRepository).save(kühlschrank);
 
         assertThat(result).isSameAs(kühlschrank);
@@ -87,19 +95,22 @@ class KühlschrankVerwaltungsServiceTest {
     @Test
     void itemTeilweiseVerbraucht_verbrauchtItemUndSpeichertKuehlschrank() {
         Kühlschrank kühlschrank = mock(Kühlschrank.class);
+        Item item = mock(Item.class);
 
         when(kühlschrankRepository.findById(1))
                 .thenReturn(Optional.of(kühlschrank));
+
+        when(kühlschrank.findeItemNachId(42))
+                .thenReturn(item);
 
         when(kühlschrankRepository.save(kühlschrank))
                 .thenReturn(kühlschrank);
 
         Kühlschrank result = service.itemTeilweiseVerbraucht(1, 42, 2);
 
-        verify(kühlschrank).itemVerbrauchen(42, 2);
+        verify(kühlschrank).itemVerbrauchen(item, 2);
         verify(kühlschrankRepository).save(kühlschrank);
 
         assertThat(result).isSameAs(kühlschrank);
     }
 }
-    */

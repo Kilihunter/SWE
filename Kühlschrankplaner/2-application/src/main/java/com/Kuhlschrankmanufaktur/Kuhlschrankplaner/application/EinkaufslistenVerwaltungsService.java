@@ -96,7 +96,7 @@ public class EinkaufslistenVerwaltungsService {
     public Einkaufsliste LebensmittelNachkaufenUmMindestBestandZuErreichen(Integer einkaufslisteId) {
         List<Kühlschrank> kühlschränke = kühlschrankVerwaltungsService.getAlleKühlschränke();
         if (kühlschränke.isEmpty()) {
-            throw new IllegalArgumentException("Es muss mindestens einen Kühlschrank geben, um die Einkaufsliste zu aktualisieren.");
+            throw new IllegalArgumentException("Es muss mindestens einen Kühlschrank geben, wo sollen sonst die lebensmittel gelagert werden?");
         }
         Einkaufsliste einkaufsliste = einkaufslisteRepository.findById(einkaufslisteId)
                 .orElseThrow(() -> new IllegalArgumentException("Einkaufsliste mit ID " + einkaufslisteId + " nicht gefunden."));
@@ -111,11 +111,12 @@ public class EinkaufslistenVerwaltungsService {
 
             if (gesamtBestand < minMenge) {
                 int fehlendeMenge = minMenge - gesamtBestand;
-                einkaufsliste.schreibeAuf(fehlendeMenge, lebensmittel);
+                if (fehlendeMenge > 0) {
+                    if (!einkaufsliste.getEintraege().containsKey(lebensmittel)) {
+                        einkaufsliste.schreibeAuf(fehlendeMenge, lebensmittel);
+                    }
+                }
             }
-        }
-        for (Kühlschrank kühlschrank : kühlschränke) {
-            kühlschrankVerwaltungsService.kühlschrankSpeichern(kühlschrank);
         }
         return einkaufslisteRepository.save(einkaufsliste);
 }

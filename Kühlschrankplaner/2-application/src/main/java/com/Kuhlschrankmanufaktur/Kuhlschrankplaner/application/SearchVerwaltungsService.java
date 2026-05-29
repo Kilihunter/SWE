@@ -18,12 +18,13 @@ public class SearchVerwaltungsService {
         this.repository = repository;
     }
 
-    public List<Item> findeAblaufendeUndAbgelaufeneItems(Integer kuehlschrankId, int tageBisAblauf) {
+    public List<Item> findeAbgelaufendeItems(Integer kuehlschrankId, int tageBisAblauf) {
         LocalDate grenzDatum = LocalDate.now().plusDays(tageBisAblauf);
 
         return ladeZielKuehlschraenke(kuehlschrankId).stream()
                 .flatMap(kuehlschrank -> kuehlschrank.getItems().stream())
                 .filter(item -> !item.getHaltbarkeit().getDatum().isAfter(grenzDatum))
+                .filter(item -> !istAbgelaufen(item))
                 .sorted(Comparator.comparing(item -> item.getHaltbarkeit().getDatum()))
                 .collect(Collectors.toList());
     }
@@ -68,20 +69,21 @@ public class SearchVerwaltungsService {
         Kategorie suchKategorie = Kategorie.valueOf(kategorieStr.toUpperCase());
 
         return itemStream.filter(item ->
-                item.getLebensmittel().getKategorie() == suchKategorie
+                item.getLebensmittel().getKategorie().equals(suchKategorie)
         );
     }
 
     private Stream<Item> filterNachStatus(Stream<Item> itemStream, String status) {
+        if (status == null || status.isBlank()) {
+            return itemStream;
+        }
         if ("ABGELAUFEN".equalsIgnoreCase(status)) {
             return itemStream.filter(this::istAbgelaufen);
-        }
-
-        if ("OK".equalsIgnoreCase(status)) {
+        } else if ("OK".equalsIgnoreCase(status)) {
             return itemStream.filter(item -> !istAbgelaufen(item));
+        } else {
+            throw new IllegalArgumentException("Unbekannter Status: " + status + ". Erlaubte Werte: OK, ABGELAUFEN");
         }
-
-        return itemStream;
     }
 
     private boolean istAbgelaufen(Item item) {

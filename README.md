@@ -15,25 +15,19 @@ Die Anwendung unterstützt folgende Funktionen:
 - Bestand nach Kategorie filtern
 - Bestand nach Status filtern, z. B. `OK` oder `ABGELAUFEN`
 - Bestand nach Name oder Haltbarkeit sortieren
-- ablaufende Items anzeigen
+- ablaufende Items anzeigen (Items deren Haltbarkeitsdatum innerhalb der nächsten X Tage liegt, default: 3 Tage)
 - Einkaufsliste anlegen
 - Einkaufslisten anzeigen
 - Einträge auf eine Einkaufsliste schreiben
 - Einkauf verarbeiten, sodass gekaufte Items in den Kühlschrank übernommen und von der Einkaufsliste entfernt werden
 - abgelaufene Items aus dem Kühlschrank entfernen und automatisch auf die Einkaufsliste schreiben
-  
-## Datenbank
+- Mindestbestand prüfen und fehlende Lebensmittel automatisch auf die Einkaufsliste schreiben
+# Anwendung starten
 
-DB starten (im Kühlschrankplaner-Verzeichnis)
+DB starten im Root-Ordner Kühlschrankplaner
+```bash
 docker compose up -d
-
-DB stoppen
-docker compose down
-
-DB stoppen UND Daten löschen
-docker compose down -v
-
-## Anwendung starten
+```
 
 Zuerst im Root-Ordner Kühlschrankplaner das Projekt bauen:
 ```bash
@@ -58,14 +52,34 @@ Nach dem Start ist die Anwendung erreichbar unter:
 http://localhost:8080
 ```
 
+DB stoppen
+```bash
+docker compose down
+```
+
+DB stoppen UND Daten löschen
+```bash
+docker compose down -v
+```
+
 ## Tests ausführen
 
-Die 10 Unit Tests liegen in der Application-Schicht.
+Die ersten 10 Unit Tests liegen in der Application-Schicht.
 
 Dazu aus dem Root-Ordner in das Application-Modul wechseln:
 
 ```bash
 cd 2-application
+```
+
+Dann die Tests ausführen:
+
+```bash
+mvn test
+```
+Die restlichen 8 Tests liegen in der Domain-Schicht 
+```bash
+cd 3-domain
 ```
 
 Dann die Tests ausführen:

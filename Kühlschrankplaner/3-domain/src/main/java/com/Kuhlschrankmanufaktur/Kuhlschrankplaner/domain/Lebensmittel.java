@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public final class Lebensmittel {
@@ -42,7 +43,7 @@ public final class Lebensmittel {
         this.name = name;
         this.kategorie = kategorie;
         this.einheit = einheit;
-        this.minMenge = minMenge == 0 ? null : minMenge; 
+        this.minMenge = minMenge; 
     }
 
     public Lebensmittel lebensmittelAnpassen(Kategorie neueKategorie, Einheit neueEinheit, Integer neueMinMenge) {
@@ -58,7 +59,7 @@ public final class Lebensmittel {
 
         this.kategorie = neueKategorie;
         this.einheit = neueEinheit;
-        this.minMenge = neueMinMenge == 0 ? null : neueMinMenge; 
+        this.minMenge = neueMinMenge; 
         return this;
     }
 
@@ -76,5 +77,17 @@ public final class Lebensmittel {
 
     public Integer getMinMenge() {
         return minMenge;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Lebensmittel l)) return false;
+        return name != null && name.equals(l.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
